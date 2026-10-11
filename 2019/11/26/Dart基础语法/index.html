@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Flutter,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Dart语法基础 本文内容主要是对Dart的语法基础进行总结，首先推荐一个线上调试Dart的地址repl.it，下面开始对Dart语法进行介绍。 初体验 试着写一个hello world，你会发现Dart和Java还有Javascript都有些相似。 12345678printInteger(int a) &amp;#123;  print(&amp;apos;Hello world, this is $a.&amp;a">
+<meta name="keywords" content="Flutter">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Dart基础语法">
+<meta property="og:url" content="https://ilemon1021.github.io/2019/11/26/Dart基础语法/index.html">
+<meta property="og:site_name" content="Peter&#39;s Blog">
+<meta property="og:description" content="Dart语法基础 本文内容主要是对Dart的语法基础进行总结，首先推荐一个线上调试Dart的地址repl.it，下面开始对Dart语法进行介绍。 初体验 试着写一个hello world，你会发现Dart和Java还有Javascript都有些相似。 12345678printInteger(int a) &amp;#123;  print(&amp;apos;Hello world, this is $a.&amp;a">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-11-26T04:49:33.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Dart基础语法">
+<meta name="twitter:description" content="Dart语法基础 本文内容主要是对Dart的语法基础进行总结，首先推荐一个线上调试Dart的地址repl.it，下面开始对Dart语法进行介绍。 初体验 试着写一个hello world，你会发现Dart和Java还有Javascript都有些相似。 12345678printInteger(int a) &amp;#123;  print(&amp;apos;Hello world, this is $a.&amp;a">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://ilemon1021.github.io/2019/11/26/Dart基础语法/">
+
+
+
+
+
+  <title>Dart基础语法 | Peter's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Peter's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://ilemon1021.github.io/2019/11/26/Dart基础语法/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Peter">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Peter's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Dart基础语法</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-11-26T11:34:04+08:00">
+                2019-11-26
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2019-11-26T12:49:33+08:00">
+                2019-11-26
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Flutter/" itemprop="url" rel="index">
+                    <span itemprop="name">Flutter</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="dart语法基础">Dart语法基础</h2>
+<p>本文内容主要是对Dart的语法基础进行总结，首先推荐一个线上调试Dart的地址<a href="https://repl.it/languages/dart" target="_blank" rel="noopener">repl.it</a>，下面开始对Dart语法进行介绍。</p>
+<h3 id="初体验">初体验</h3>
+<p>试着写一个hello world，你会发现Dart和Java还有Javascript都有些相似。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">printInteger(int a) &#123;</span><br><span class="line">  print(&apos;Hello world, this is $a.&apos;); </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">main() &#123;</span><br><span class="line">  var number = 2019; </span><br><span class="line">  printInteger(number); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="dart的变量与类型">Dart的变量与类型</h3>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">var 声明一个变量，表示类型由编译器推断决定</span><br><span class="line"></span><br><span class="line">Dart 是类型安全语言，all is object，甚至数字、布尔值、函数和 null 也都是继承自 Object 的对象</span><br><span class="line"></span><br><span class="line">基本类型：num bool String List map</span><br></pre></td></tr></table></figure>
+<h4 id="数值类型">数值类型</h4>
+<p>Dart 的数值类型 num ，有两种子类 int 和 double 。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">int x = 1;</span><br><span class="line">int hex = 0xEEADBEEF;</span><br><span class="line">double y = 1.1;</span><br><span class="line">double exponents = 1.13e5;</span><br><span class="line">int roundY = y.round();</span><br></pre></td></tr></table></figure>
+<h4 id="布尔值">布尔值</h4>
+<p>在 Dart 里，只有两个对象具有 bool 类型：true 和 false，它们都是编译时常量。</p>
+<p>Dart 是类型安全的，因此我们不能使用 if(nonbooleanValue) 或 assert(nonbooleanValue) 之类的在 JavaScript 可以正常工作的代码，而应该显式地检查值。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 检查是否为0.</span><br><span class="line">var number = 0;</span><br><span class="line">assert(number == 0);</span><br><span class="line">// assert(number); 错误</span><br></pre></td></tr></table></figure>
+<h4 id="string">string</h4>
+<p>Dart 的 String 由 UTF-16 的字符串组成。和 JavaScript 一样，构造字符串字面量时既能使用单引号也能使用双引号，还能在字符串中嵌入变量或表达式：你可以使用 ${express} 把一个表达式的值放进字符串。而如果是一个标识符，你可以省略{}。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">var s = &apos;cat&apos;;</span><br><span class="line">var s1 = &apos;this is a uppercased string: $&#123;s.toUpperCase()&#125;&apos;;</span><br><span class="line"></span><br><span class="line">var s2 = &apos;Hello&apos; + &apos; &apos; + &apos;World!&apos; ;</span><br><span class="line">var s3 = &quot;&quot;&quot;This is amulti-line string.&quot;&quot;&quot;;</span><br></pre></td></tr></table></figure>
+<h4 id="list与map">List与map</h4>
+<p>它们的声明和使用很简单，和 JavaScript 中的用法类似。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">var arr1 = [&quot;Tom&quot;, &quot;Andy&quot;, &quot;Jack&quot;];</span><br><span class="line">var arr2 = List.of([1,2,3]);</span><br><span class="line">arr2.add(499);</span><br><span class="line">arr2.forEach((v) =&gt; print(&apos;$&#123;v&#125;&apos;));</span><br><span class="line">  </span><br><span class="line">var map1 = &#123;&quot;name&quot;: &quot;Tom&quot;, &apos;sex&apos;: &apos;male&apos;&#125;; </span><br><span class="line">var map2 = new Map();</span><br><span class="line">map2[&apos;name&apos;] = &apos;Tom&apos;;</span><br><span class="line">map2[&apos;sex&apos;] = &apos;male&apos;;</span><br><span class="line">map2.forEach((k,v) =&gt; print(&apos;$&#123;k&#125;: $&#123;v&#125;&apos;));</span><br></pre></td></tr></table></figure>
+<p>和 Java 语言类似，在初始化集合实例对象时，你可以为它的类型添加约束，也可以用于后续判断集合类型。</p>
+<p>下面的这段代码，在增加了类型约束后，语义会更清晰</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">var arr1 = &lt;String&gt;[&apos;Tom&apos;, &apos;Andy&apos;, &apos;Jack&apos;];</span><br><span class="line">var arr2 = new List&lt;int&gt;.of([1,2,3]);</span><br><span class="line">arr2.add(499);</span><br><span class="line">arr2.forEach((v) =&gt; print(&apos;$&#123;v&#125;&apos;));</span><br><span class="line">print(arr2 is List&lt;int&gt;); // true</span><br><span class="line"></span><br><span class="line">var map1 = &lt;String, String&gt;&#123;&apos;name&apos;: &apos;Tom&apos;,&apos;sex&apos;: &apos;male&apos;,&#125;;</span><br><span class="line">var map2 = new Map&lt;String, String&gt;();</span><br><span class="line">map2[&apos;name&apos;] = &apos;Tom&apos;;</span><br><span class="line">map2[&apos;sex&apos;] = &apos;male&apos;;</span><br><span class="line">map2.forEach((k,v) =&gt; print(&apos;$&#123;k&#125;: $&#123;v&#125;&apos;)); </span><br><span class="line">print(map2 is Map&lt;String, String&gt;); // true</span><br></pre></td></tr></table></figure>
+<h4 id="常量定义">常量定义</h4>
+<ul>
+<li>const，表示变量在编译期间即能确定的值；</li>
+<li>final 则不太一样，用它定义的变量可以在运行时确定值，而一旦确定后就不可再变。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">final name = &apos;Andy&apos;;</span><br><span class="line">const count = 3;</span><br><span class="line"></span><br><span class="line">var x = 70;  </span><br><span class="line">var y = 30;</span><br><span class="line">final z = x / y;</span><br></pre></td></tr></table></figure>
+<h3 id="函数">函数</h3>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">bool isZero(int number) &#123; //判断整数是否为0</span><br><span class="line">  return number == 0; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void printInfo(int number,Function check) &#123; //用check函数来判断整数是否为0</span><br><span class="line">  print(&quot;$number is Zero: $&#123;check(number)&#125;&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Function f = isZero;</span><br><span class="line">int x = 10;</span><br><span class="line">int y = 0;</span><br><span class="line">printInfo(x,f);  // 输出 10 is Zero: false</span><br><span class="line">printInfo(y,f);  // 输出 0 is Zero: true</span><br></pre></td></tr></table></figure>
+<p>还可以像 JavaScript 语言那样用箭头函数来简化这个函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bool isZero(int number) =&gt; number == 0;</span><br><span class="line"></span><br><span class="line">void printInfo(int number,Function check) =&gt; print(&quot;$number is Zero: $&#123;check(number)&#125;&quot;);</span><br></pre></td></tr></table></figure>
+<p>C++ 与 Java 提供函数的重载，即提供同名但参数不同的函数。</p>
+<p>Dart 认为重载会导致混乱，因此从设计之初就不支持重载，而是提供了可选命名参数和可选参数。</p>
+<p>具体方式是，在声明函数时：</p>
+<ul>
+<li>给参数增加{}，以 paramName: value 的方式指定调用参数，也就是可选命名参数；</li>
+<li>给参数增加 []，则意味着这些参数是可以忽略的，也就是可选参数。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">//要达到可选命名参数的用法，那就在定义函数的时候给参数加上 &#123;&#125;</span><br><span class="line">void enable1Flags(&#123;bool bold, bool hidden&#125;) =&gt; print(&quot;$bold , $hidden&quot;);</span><br><span class="line"></span><br><span class="line">//定义可选命名参数时增加默认值</span><br><span class="line">void enable2Flags(&#123;bool bold = true, bool hidden = false&#125;) =&gt; print(&quot;$bold ,$hidden&quot;);</span><br><span class="line"></span><br><span class="line">//可忽略的参数在函数定义时用[]符号指定</span><br><span class="line">void enable3Flags(bool bold, [bool hidden]) =&gt; print(&quot;$bold ,$hidden&quot;);</span><br><span class="line"></span><br><span class="line">//定义可忽略参数时增加默认值</span><br><span class="line">void enable4Flags(bool bold, [bool hidden = false]) =&gt; print(&quot;$bold ,$hidden&quot;);</span><br><span class="line"></span><br><span class="line">//可选命名参数函数调用</span><br><span class="line">enable1Flags(bold: true, hidden: false); //true, false</span><br><span class="line">enable1Flags(bold: true); //true, null</span><br><span class="line">enable2Flags(bold: false); //false, false</span><br><span class="line"></span><br><span class="line">//可忽略参数函数调用</span><br><span class="line">enable3Flags(true, false); //true, false</span><br><span class="line">enable3Flags(true,); //true, null</span><br><span class="line">enable4Flags(true); //true, false</span><br><span class="line">enable4Flags(true,true); // true, true</span><br></pre></td></tr></table></figure>
+<h3 id="类">类</h3>
+<p>Dart 是面向对象的语言，每个对象都是一个类的实例，都继承自顶层类型 Object。</p>
+<p>Dart 中并没有 public、protected、private 这些关键字，我们只要在声明变量与方法时，在前面加上“<strong>”即可作为 private 方法使用。如果不加“</strong>”，则默认为 public。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">class Point &#123;</span><br><span class="line">  num x, y;</span><br><span class="line">  static num factor = 0;</span><br><span class="line">  //语法糖，等同于在函数体内：this.x = x;this.y = y;</span><br><span class="line">  Point(this.x,this.y);</span><br><span class="line">  void printInfo() =&gt; print(&apos;($x, $y)&apos;);</span><br><span class="line">  static void printZValue() =&gt; print(&apos;$factor&apos;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var p = new Point(100,200); // new 关键字可以省略</span><br><span class="line">p.printInfo();  // 输出(100, 200);</span><br><span class="line">Point.factor = 10;</span><br><span class="line">Point.printZValue(); // 输出10</span><br></pre></td></tr></table></figure>
+<p>与 C++ 类似，Dart 支持初始化列表。在构造函数的函数体真正执行之前，你还有机会给实例变量赋值，甚至重定向至另一个构造函数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">class Point &#123;</span><br><span class="line">  num x, y, z;</span><br><span class="line">  Point(this.x, this.y) : z = 0; // 初始化变量z</span><br><span class="line">  Point.bottom(num x) : this(x, 0); // 重定向构造函数</span><br><span class="line">  void printInfo() =&gt; print(&apos;($x,$y,$z)&apos;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var p = Point.bottom(100);</span><br><span class="line">p.printInfo(); // 输出(100,0,0)</span><br></pre></td></tr></table></figure>
+<h3 id="复用">复用</h3>
+<p>复用的方式一般有两种：继承父类和接口实现。这两方方式的区别如下：</p>
+<ul>
+<li>继承父类意味着，子类由父类派生，会自动获取父类的成员变量和方法实现，子类可以根据需要覆写构造函数及父类方法；</li>
+<li>接口实现则意味着，子类获取到的仅仅是接口的成员变量符号和方法符号，需要重新实现成员变量，以及方法的声明和初始化，否则编译器会报错。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">class Point &#123;</span><br><span class="line">  num x = 0, y = 0;</span><br><span class="line">  void printInfo() =&gt; print(&apos;($x,$y)&apos;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//Vector继承自Point</span><br><span class="line">class Vector extends Point&#123;</span><br><span class="line">  num z = 0;</span><br><span class="line">  @override</span><br><span class="line">  void printInfo() =&gt; print(&apos;($x,$y,$z)&apos;); //覆写了printInfo实现</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//Coordinate是对Point的接口实现</span><br><span class="line">//Dart中，每个类都是接口。Coordinate必须实现Point的除构造函数之外的所有成员函数和成员变量</span><br><span class="line">class Coordinate implements Point &#123;</span><br><span class="line">  num x = 0, y = 0; //成员变量需要重新声明</span><br><span class="line">  void printInfo() =&gt; print(&apos;($x,$y)&apos;); //成员函数需要重新声明实现</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var xxx = Vector(); </span><br><span class="line">xxx</span><br><span class="line">  ..x = 1</span><br><span class="line">  ..y = 2</span><br><span class="line">  ..z = 3; //级联运算符，等同于xxx.x=1; xxx.y=2;xxx.z=3;</span><br><span class="line">xxx.printInfo(); //输出(1,2,3)</span><br><span class="line"></span><br><span class="line">var yyy = Coordinate();</span><br><span class="line">yyy</span><br><span class="line">  ..x = 1</span><br><span class="line">  ..y = 2; //级联运算符，等同于yyy.x=1; yyy.y=2;</span><br><span class="line">yyy.printInfo(); //输出(1,2)</span><br><span class="line">print (yyy is Point); //true</span><br><span class="line">print(yyy is Coordinate); //true</span><br></pre></td></tr></table></figure>
+<p>可以看出，子类 Coordinate 采用接口实现的方式，仅仅是获取到了父类 Point 的一个“空壳子”，只能从语义层面当成接口 Point 来用，但并不能复用 Point 的原有实现。那么，我们是否能够找到方法去复用 Point 的对应方法实现呢？</p>
+<h4 id="混入-mixin">混入（Mixin）</h4>
+<p>Dart 的继承是单继承，如果上栗中 Coordinate 已经有了父类，又想要去复用 Point 的原有的实现，如何实现？</p>
+<p>Dart提供了混入机制，只需要 with 关键字即可。</p>
+<p>维基百科：在面向对象的语言中，mixins类是一个可以把自己的方法提供给其他类使用，但却不需要成为其他类的父类。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">class CoordinateT with Point &#123;</span><br><span class="line">  CoordinateT() &#123;</span><br><span class="line">    x = 20;</span><br><span class="line">    y = 20;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var yyy = Coordinate();</span><br><span class="line">print (yyy is Point); //true</span><br><span class="line">print(yyy is Coordinate); //true</span><br><span class="line">yyy.printInfo()//(20,20)</span><br></pre></td></tr></table></figure>
+<p>minxin不是多继承：</p>
+<p>Mixins is not a way to get multiple inheritance in the classical sense. Mixins is a way to abstract and reuse a family of operations and state. It is similar to the reuse you get from extending a class, but it is compatible with single-inheritance because it is linear.</p>
+<h4 id="抽象类">抽象类</h4>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">abstract class Animals &#123;</span><br><span class="line">  num age;</span><br><span class="line"></span><br><span class="line">  void eat() =&gt; print(&quot;eat&quot;);</span><br><span class="line">  void run();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Human extends Animals&#123;</span><br><span class="line">  @override</span><br><span class="line">  void run() &#123;</span><br><span class="line">    // TODO: implement run</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>抽象类不能被实例化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Animals animals= Animals(); //error</span><br></pre></td></tr></table></figure>
+<p>总结自：极客时间《Flutter核心技术与实战》-陈航</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Flutter/" rel="tag"># Flutter</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/08/23/CaseStudy-AsyncTask执行问题小结/" rel="next" title="CaseStudy-AsyncTask执行问题小结">
+                <i class="fa fa-chevron-left"></i> CaseStudy-AsyncTask执行问题小结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/11/27/JVM内存模型与垃圾回收小结/" rel="prev" title="JVM内存模型与垃圾回收小结">
+                JVM内存模型与垃圾回收小结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Peter</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#dart语法基础"><span class="nav-number">1.</span> <span class="nav-text">Dart语法基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#初体验"><span class="nav-number">1.1.</span> <span class="nav-text">初体验</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dart的变量与类型"><span class="nav-number">1.2.</span> <span class="nav-text">Dart的变量与类型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#数值类型"><span class="nav-number">1.2.1.</span> <span class="nav-text">数值类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#布尔值"><span class="nav-number">1.2.2.</span> <span class="nav-text">布尔值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#string"><span class="nav-number">1.2.3.</span> <span class="nav-text">string</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#list与map"><span class="nav-number">1.2.4.</span> <span class="nav-text">List与map</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#常量定义"><span class="nav-number">1.2.5.</span> <span class="nav-text">常量定义</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#函数"><span class="nav-number">1.3.</span> <span class="nav-text">函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类"><span class="nav-number">1.4.</span> <span class="nav-text">类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#复用"><span class="nav-number">1.5.</span> <span class="nav-text">复用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#混入-mixin"><span class="nav-number">1.5.1.</span> <span class="nav-text">混入（Mixin）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#抽象类"><span class="nav-number">1.5.2.</span> <span class="nav-text">抽象类</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Peter</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
