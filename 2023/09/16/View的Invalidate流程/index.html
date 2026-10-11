@@ -84,7 +84,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="View的Invalidate流程">
 <meta property="og:url" content="https://ilemon1021.github.io/2023/09/16/View的Invalidate流程/index.html">
-<meta property="og:site_name" content="Peter&#39;s Blog">
+<meta property="og:site_name" content="ilemon&#39;s Blog">
 <meta property="og:description" content="前言 本文主要是整理下 View 执行 invalidate 方法的流程（软件绘制场景下）。 时序图 核心点是执行 view 的 doTraversal 之前会插入同步屏障，然后依赖 Choreographer postCallback 的监听系统的 vsync 信号，当信号到来时执行 doTraversal 方法，在此之后移除同步屏障，紧接着就是自顶向下执行 measure，layout，dra">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://ilemon1021.github.io/2023/09/16/View的Invalidate流程/invalidate%E6%B5%81%E7%A8%8B.png">
@@ -128,7 +128,7 @@
 
 
 
-  <title>View的Invalidate流程 | Peter's Blog</title>
+  <title>View的Invalidate流程 | ilemon's Blog</title>
   
 
 
@@ -158,7 +158,7 @@
     <div class="custom-logo-site-title">
       <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
-        <span class="site-title">Peter's Blog</span>
+        <span class="site-title">ilemon's Blog</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
@@ -306,7 +306,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Peter's Blog">
+      <meta itemprop="name" content="ilemon's Blog">
     </span>
 
     
