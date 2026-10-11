@@ -128,45 +128,9 @@
       </tags>
   </entry>
   <entry>
-    <title>Dart异步编程</title>
-    <url>/2020/01/06/Dart%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/</url>
-    <content><![CDATA[<p>本文简单介绍下 Future、async、await。</p>
-<h2 id="future">Future</h2>
-<p>Future 代表异步操作的结果，并且有两个状态：未完成、完成。</p>
-<ul>
-<li>未完成：在此状态下，Future 会等待异步操作结束或者 throw 一个异常。</li>
-<li>完成：如果异步操作成功，Future 会返回一个值（ T、Void ）。相反，Future 会 throw 一个异常。</li>
-</ul>
-<p>Future 的例子：</p>
-<figure class="highlight dart"><table><tr><td class="code"><pre><span class="line">Future&lt;<span class="keyword">void</span>&gt; fetchUserOrder() &#123;</span><br><span class="line">  <span class="comment">// Imagine that this function is fetching user info from another service or database</span></span><br><span class="line">  <span class="keyword">return</span> Future.delayed(<span class="built_in">Duration</span>(seconds: <span class="number">3</span>), () =&gt; <span class="built_in">print</span>(<span class="string">'Large Latte'</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> main() &#123;</span><br><span class="line">  fetchUserOrder();</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">'Fetching user order...'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">输出：</span><br><span class="line">Fetching user order...</span><br><span class="line">Large Latte</span><br></pre></td></tr></table></figure>
-<p>在 main 方法中，虽然 fetchUserOrder 方法是先执行的，但是 fetchUserOrder 方法是返回 Future<void> 的异步方法（延迟了3秒），所以先执行了后面的 print 方法。由此可见 Future 是不会阻塞方法的执行的。</void></p>
-<h2 id="async-await">async、await</h2>
-<p>async 和 await 关键字提供了一种声明性的方式来定义异步函数并使用其结果，并且这两个关键字有两条使用准则：</p>
-<ul>
-<li>要定义异步函数，请在函数主体之前添加 async。</li>
-<li>await 关键字只会在使用 async 声明的方法体内生效。</li>
-</ul>
-<p>使用方式如下</p>
-<figure class="highlight dart"><table><tr><td class="code"><pre><span class="line">Future&lt;<span class="keyword">void</span>&gt; main() <span class="keyword">async</span> &#123;</span><br><span class="line">  <span class="built_in">print</span>(<span class="keyword">await</span> createOrderMessage());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这两个关键字的作用：</p>
-<ul>
-<li>async：将一个函数体标记为异步。</li>
-<li>await：等待一个Future的执行结束后，再执行后续的代码。这意味着在异步函数体内，第一个await关键字之前的所有同步代码将立即执行。另外，可以使用await关键字来获取异步表达式的完整结果。</li>
-</ul>
-<p>下面看一个例子：</p>
-<figure class="highlight dart"><table><tr><td class="code"><pre><span class="line"><span class="keyword">void</span> printOrderMessage () <span class="keyword">async</span> &#123;</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">'Awaiting user order...'</span>);</span><br><span class="line">  <span class="keyword">var</span> order = <span class="keyword">await</span> fetchUserOrder();</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">'Your order is: <span class="subst">$order</span>'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Future&lt;<span class="built_in">String</span>&gt; fetchUserOrder() &#123;</span><br><span class="line">  <span class="comment">// Imagine that this function is more complex and slow.</span></span><br><span class="line">  <span class="keyword">return</span> Future.delayed(<span class="built_in">Duration</span>(seconds: <span class="number">4</span>), () =&gt; <span class="string">'Large Latte'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Future&lt;<span class="keyword">void</span>&gt;main() <span class="keyword">async</span> &#123;</span><br><span class="line">  countSeconds(<span class="number">4</span>);</span><br><span class="line">  <span class="keyword">await</span> printOrderMessage();</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">'main finish!!'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// You can ignore this function - it's here to visualize delay time in this example.</span></span><br><span class="line"><span class="keyword">void</span> countSeconds(s) &#123;</span><br><span class="line">  <span class="keyword">for</span>( <span class="keyword">var</span> i = <span class="number">1</span> ; i &lt;= s; i++ ) &#123;</span><br><span class="line">      Future.delayed(<span class="built_in">Duration</span>(seconds: i), () =&gt; <span class="built_in">print</span>(i));</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">输出：</span><br><span class="line">Awaiting user order...</span><br><span class="line"><span class="number">1</span></span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="number">3</span></span><br><span class="line"><span class="number">4</span></span><br><span class="line">Your order <span class="keyword">is</span>: Large Latte</span><br><span class="line">main finish!!</span><br></pre></td></tr></table></figure>
-<p>在 main 方法中，先执行了同步方法 countSeconds ，在 countSeconds 中执行了异步方法，每隔一秒打印1次，共执行4次，即4秒。接着继续方法 printOrderMessage ，在 printOrderMessage 中先执行了同步方法，进行了打印，接着因为有 await 字段出现，会等待 fetchUserOrder 这个异步方法执行结束后在向下执行。fetchUserOrder 执行结束之后，才执行了“ Your order is xxxx ”。最后在 main 方法中等待 printOrderMessage 方法执行结束后，执行了打印方法。</p>
-<h2 id="业务场景">业务场景</h2>
-<p>看一个简单的使用场景的省略代码。</p>
-<figure class="highlight dart"><table><tr><td class="code"><pre><span class="line"><span class="built_in">List</span> data = <span class="built_in">List</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> initState() &#123;</span><br><span class="line">  fetchData();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> fetchData() <span class="keyword">async</span> &#123;</span><br><span class="line">  data = <span class="keyword">await</span> HttpUtil.<span class="keyword">get</span>();</span><br><span class="line"></span><br><span class="line">  setState(() &#123;&#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Widget build(BuildContext context) &#123;</span><br><span class="line">  <span class="keyword">return</span> ListContainer(</span><br><span class="line">    child: data.length&gt;<span class="number">0</span>?<span class="built_in">List</span>(</span><br><span class="line">      data: data,</span><br><span class="line">    ):<span class="keyword">null</span>,</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>总结自：<a href="https://dart.dev/codelabs/async-await" target="_blank" rel="noopener">https://dart.dev/codelabs/async-await</a></p>
-]]></content>
-      <categories>
-        <category>Flutter</category>
-      </categories>
-      <tags>
-        <tag>Flutter</tag>
-      </tags>
+    <title>CaseStudy-AsyncTask执行问题小结</title>
+    <url>/2019/08/23/CaseStudy-AsyncTask%E6%89%A7%E8%A1%8C%E9%97%AE%E9%A2%98%E5%B0%8F%E7%BB%93/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Dart基础语法</title>
@@ -247,9 +211,110 @@
       </tags>
   </entry>
   <entry>
-    <title>CaseStudy-AsyncTask执行问题小结</title>
-    <url>/2019/08/23/CaseStudy-AsyncTask%E6%89%A7%E8%A1%8C%E9%97%AE%E9%A2%98%E5%B0%8F%E7%BB%93/</url>
-    <content><![CDATA[]]></content>
+    <title>FPS监控调研</title>
+    <url>/2023/11/27/FPS%E7%9B%91%E6%8E%A7%E8%B0%83%E7%A0%94/</url>
+    <content><![CDATA[<h1>定义</h1>
+<p>某段连续时间 deltT 内渲染完成的帧数 n，那么 n / deltT 就是帧率（Frames Per Second）。</p>
+<h1>四种方式</h1>
+<p>Android没有提供直接获取帧率的方法，而是直接或者间接的提供了获取每一帧渲染耗时的功能，经过二次计算后得到帧率。</p>
+<ul>
+<li>SurfaceFlinger</li>
+<li>Gfxinfo</li>
+<li>FrameMetrics</li>
+<li>Choreographer</li>
+</ul>
+<h2 id="surfaceflinger">SurfaceFlinger</h2>
+<p>SurfaceFlinger服务运行在Android系统的System进程中，它负责管理Android系统的帧缓冲区（Frame Buffer），绘制应用程序的UI。Android应用程序会请求SurfaceFlinger服务创建Surface，在上面绘制自己的UI，然后将这个已经绘制好了UI的Surface渲染到设备显示屏上去。通过获取SurfaceFlinger的一些数据，我们可以计算出帧率。</p>
+<ul>
+<li>方法一：通过“<strong>adb shell dumpsys SurfaceFlinger --latency</strong>”命令，可以获得历史的127条帧绘制数据。</li>
+<li>方法二：通过“<strong>service call SurfaceFlinger 1013</strong>”获取帧数1，在经过deltT时间后再次通过这个命令获取帧数2，使用（帧数2-帧数1）/deltT即可计算出帧率。</li>
+</ul>
+<p>优点：计算帧率的一个周期报过了CPU和GPU的渲染实现，所以计算结果准确</p>
+<p>缺点：只能通过adb使用，没办法用于线上</p>
+<h2 id="gfxinfo">Gfxinfo</h2>
+<p>我们平常通过[设置]-&gt;[开发者选项]-&gt;[GPU呈现模式分析] -&gt;[在屏幕上显示为条形图] 这样的方式来观察页面的绘制情况，而“gfxinfo”命令就是将条形图数字化了。</p>
+<p>在 5.0 上执行 gfxinfo 命令，得到的即为渲染一帧所经过的各个阶段的耗时情况：</p>
+<p><strong>Draw: 表示在Java中创建显示列表部分中，OnDraw()方法占用的时间。</strong></p>
+<p><strong>Process：表示渲染引擎执行显示列表所花的时间，view越多，时间就越长</strong></p>
+<p><strong>Execute：表示把一帧数据发送到屏幕上排版显示实际花费的时间。其实是实际显示帧数据的后台缓存区与前台缓冲区交换后并将前台缓冲区的内容显示到屏幕上的时间。</strong></p>
+<p><strong>Draw + Process + Execute = 完整显示一帧 ，这个时间要小于16ms才能保证每秒60帧。</strong></p>
+<p>优点：计算帧率的一个周期报过了CPU和GPU的渲染实现，所以计算结果准确</p>
+<p>缺点：这个命令可以在代码中通过反射的方式获取到数据，但是需要用户<strong>手动</strong>的在[设置]-&gt;[开发者选项]-&gt;[GPU呈现模式分析] -&gt;[在屏幕上显示为条形图] /[显示在adb shell dumpsys gfxinfo中]</p>
+<h2 id="framemetrics">FrameMetrics</h2>
+<p>虽然 FrameMetrics 与 Gfxinfo 的数据同源，但是二者在计算帧率时也有差别。FrameMetrics 获得的是单个帧的数据，正常情况下只能拿到渲染一帧的各个阶段的数据（加起来是该帧总耗时），但可以通过反射拿到FrameMetrics的mTimingData变量中的数据（该数据就是gfxinfo命令带framestats的结果）</p>
+<p>优点：官方推荐，计算方式简单，可以获得绘制的各个阶段的起始时间和耗时。</p>
+<p>缺点：api≥24</p>
+<h2 id="choreographer">Choreographer</h2>
+<p>Choreographer机制是Android 4.1加入的，用于同Vsync机制配合，实现统一调度界面绘图。一次屏幕刷新完成后，将产生 VSync 信号并通知 Choreographer。 Choreographer 收到通知依次处理 Input、Animation、Draw，这三个过程都是通过 FrameCallback 回调的方式完成的。在 Draw 过程中，具体是执行 ViewRootImpl#performTraversals() 方法，完成视图树的 measure、layout、draw 流程。 而 FrameCallback#doFrame(long frameTimeNanos) 方法中可以得到 VSync 到来的时间戳，这样就能得到连续两帧开始渲染之间的间隔，将该值近似作为上一帧的渲染耗时。 实现 FrameCallback 接口，并通过 Choreographer#postFrameCallback() 方法将其跟 Input、Animation、Draw 这些回调一起塞入主线程的消息队列，就能源源不断的获取每一帧的渲染时间戳，每一个 VSync 的时间戳代表一帧，这样可以得到某段时间内渲染完成的帧数，二者相除即可得到帧率。</p>
+<p>优点：计算方式简单</p>
+<p>缺点：</p>
+<p>在Android 5.0之后，由主线程和Render Thread 线程共同完成一帧的绘制，其中又分两种情况（具体见 <a href="https://www.jianshu.com/p/bc1c1d2fadd1" target="_blank" rel="noopener">Android5.0中 hwui 中 RenderThread 工作流程</a> 文尾表述）：</p>
+<ul>
+<li>主线程在完成第一帧自己负责的部分后交给 Render Thread 线程，然后自己马不停蹄的继续绘制第二帧；</li>
+<li>在完成第一帧自己负责的部分后交给 Render Thread 线程，然后等待 Render Thread 完成第一帧剩余的工作后在进行第二帧的绘制；</li>
+</ul>
+<p>一次滑动过程中，上述两种情况可能均存在，但是Choreographer只统计了主线程中的部分，而忽略了 Render 线程的部分，这样会导致得到的<strong>耗时偏小、帧率偏大</strong>。更进一步，既然一帧的绘制和渲染分布于两个线程， 那即使一帧的耗时综合大于 16.6 ms，只要位于 UI 线程部分的耗时不超过 16.6ms，那么就不影响 UI 线程绘制下一帧，但是会导致屏幕接着显示上一帧的内容，出现掉帧，而 Choreographer 仅凭帧耗时无法检测出这种掉帧。</p>
+<h1>总结与分析</h1>
+<p>Choreographer和FrameMetrics的方案比较容易实现，但是目前只采用了Choreographer方案收集数据。但就上面的调研结果来看，Choreographer的统计帧率偏大，另外Choreographer采用postFrameCallback()的方法是会源源不断的回调doFrame()方法（<strong>即使页面不在渲染</strong>），所以采用的是（连续时间内回调doFrame()方法的次数/这段时间）来计算帧率。而FrameMetrics只有<strong>在页面渲染</strong>的时候才会回调方法，所以采用的是（取回调方法中的渲染总耗时+之前的平均帧率*之前的回调次数）/当前回调次数来计算帧率。所以Choreographer和FrameMetrics之间的误差还在于当页面处于静止状态，不需要渲染时，Choreographer的计算结果会慢慢偏向于60帧，造成该页面整体流畅的假象。所以，采用FrameMetrics方案更准确。</p>
+<p>思考：</p>
+<p>一般来说，Choreographer和FrameMetrics方案都只是计算的平均FPS，平均值只能反应一组数据集中趋势的量数，但是平均值很容易受极值的影响，比如在一个滚动页面中，第一个页面FPS值较低，但是后续的页面FPS值很高，这样就会造成整体的平均FPS值偏高，发现不了存在的问题。所以思考能否引入多个指标来综合分析页面的流畅度？</p>
+<p>改进：</p>
+<p>新的改进方案中，引入了FPS方差、最多连续掉帧数、连续掉帧发生次数、掉帧率、严重掉帧率。</p>
+<p><strong>FPS方差</strong></p>
+<p>方差可以反应数据的波动性，用来度量数据的离散程度。那么对于上述例举的情况就能反映出来，整体的方差值偏大。</p>
+<p><strong>最多连续掉帧数</strong></p>
+<p>记录该页面内发生连续掉3帧及以上的现象，筛选出单次连续掉帧最多的一次。不管是平均值还是方差，都可能随着样本量的增多，导致某一个连续时间内的掉帧（某个view渲染耗时长）被忽视。记录最多连续掉帧数可以发现这种情况。</p>
+<p><strong>连续掉帧发生次数</strong></p>
+<p>记录该页面内发生连续掉3帧及以上现象的次数。用来发现是否页面内经常出现连续掉帧（某些view渲染耗时长导致）的情况。</p>
+<p><strong>掉帧率</strong></p>
+<p>记录帧率小于60的帧数，除以总的帧数。用来评估页面的流畅度。</p>
+<p><strong>严重掉帧率</strong></p>
+<p>记录帧率小于30的帧数，除以总的帧数。用来评估页面的流畅度。</p>
+]]></content>
+      <categories>
+        <category>安卓笔记</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Dart异步编程</title>
+    <url>/2020/01/06/Dart%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/</url>
+    <content><![CDATA[<p>本文简单介绍下 Future、async、await。</p>
+<h2 id="future">Future</h2>
+<p>Future 代表异步操作的结果，并且有两个状态：未完成、完成。</p>
+<ul>
+<li>未完成：在此状态下，Future 会等待异步操作结束或者 throw 一个异常。</li>
+<li>完成：如果异步操作成功，Future 会返回一个值（ T、Void ）。相反，Future 会 throw 一个异常。</li>
+</ul>
+<p>Future 的例子：</p>
+<figure class="highlight dart"><table><tr><td class="code"><pre><span class="line">Future&lt;<span class="keyword">void</span>&gt; fetchUserOrder() &#123;</span><br><span class="line">  <span class="comment">// Imagine that this function is fetching user info from another service or database</span></span><br><span class="line">  <span class="keyword">return</span> Future.delayed(<span class="built_in">Duration</span>(seconds: <span class="number">3</span>), () =&gt; <span class="built_in">print</span>(<span class="string">'Large Latte'</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> main() &#123;</span><br><span class="line">  fetchUserOrder();</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">'Fetching user order...'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">输出：</span><br><span class="line">Fetching user order...</span><br><span class="line">Large Latte</span><br></pre></td></tr></table></figure>
+<p>在 main 方法中，虽然 fetchUserOrder 方法是先执行的，但是 fetchUserOrder 方法是返回 Future<void> 的异步方法（延迟了3秒），所以先执行了后面的 print 方法。由此可见 Future 是不会阻塞方法的执行的。</void></p>
+<h2 id="async-await">async、await</h2>
+<p>async 和 await 关键字提供了一种声明性的方式来定义异步函数并使用其结果，并且这两个关键字有两条使用准则：</p>
+<ul>
+<li>要定义异步函数，请在函数主体之前添加 async。</li>
+<li>await 关键字只会在使用 async 声明的方法体内生效。</li>
+</ul>
+<p>使用方式如下</p>
+<figure class="highlight dart"><table><tr><td class="code"><pre><span class="line">Future&lt;<span class="keyword">void</span>&gt; main() <span class="keyword">async</span> &#123;</span><br><span class="line">  <span class="built_in">print</span>(<span class="keyword">await</span> createOrderMessage());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这两个关键字的作用：</p>
+<ul>
+<li>async：将一个函数体标记为异步。</li>
+<li>await：等待一个Future的执行结束后，再执行后续的代码。这意味着在异步函数体内，第一个await关键字之前的所有同步代码将立即执行。另外，可以使用await关键字来获取异步表达式的完整结果。</li>
+</ul>
+<p>下面看一个例子：</p>
+<figure class="highlight dart"><table><tr><td class="code"><pre><span class="line"><span class="keyword">void</span> printOrderMessage () <span class="keyword">async</span> &#123;</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">'Awaiting user order...'</span>);</span><br><span class="line">  <span class="keyword">var</span> order = <span class="keyword">await</span> fetchUserOrder();</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">'Your order is: <span class="subst">$order</span>'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Future&lt;<span class="built_in">String</span>&gt; fetchUserOrder() &#123;</span><br><span class="line">  <span class="comment">// Imagine that this function is more complex and slow.</span></span><br><span class="line">  <span class="keyword">return</span> Future.delayed(<span class="built_in">Duration</span>(seconds: <span class="number">4</span>), () =&gt; <span class="string">'Large Latte'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Future&lt;<span class="keyword">void</span>&gt;main() <span class="keyword">async</span> &#123;</span><br><span class="line">  countSeconds(<span class="number">4</span>);</span><br><span class="line">  <span class="keyword">await</span> printOrderMessage();</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">'main finish!!'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// You can ignore this function - it's here to visualize delay time in this example.</span></span><br><span class="line"><span class="keyword">void</span> countSeconds(s) &#123;</span><br><span class="line">  <span class="keyword">for</span>( <span class="keyword">var</span> i = <span class="number">1</span> ; i &lt;= s; i++ ) &#123;</span><br><span class="line">      Future.delayed(<span class="built_in">Duration</span>(seconds: i), () =&gt; <span class="built_in">print</span>(i));</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">输出：</span><br><span class="line">Awaiting user order...</span><br><span class="line"><span class="number">1</span></span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="number">3</span></span><br><span class="line"><span class="number">4</span></span><br><span class="line">Your order <span class="keyword">is</span>: Large Latte</span><br><span class="line">main finish!!</span><br></pre></td></tr></table></figure>
+<p>在 main 方法中，先执行了同步方法 countSeconds ，在 countSeconds 中执行了异步方法，每隔一秒打印1次，共执行4次，即4秒。接着继续方法 printOrderMessage ，在 printOrderMessage 中先执行了同步方法，进行了打印，接着因为有 await 字段出现，会等待 fetchUserOrder 这个异步方法执行结束后在向下执行。fetchUserOrder 执行结束之后，才执行了“ Your order is xxxx ”。最后在 main 方法中等待 printOrderMessage 方法执行结束后，执行了打印方法。</p>
+<h2 id="业务场景">业务场景</h2>
+<p>看一个简单的使用场景的省略代码。</p>
+<figure class="highlight dart"><table><tr><td class="code"><pre><span class="line"><span class="built_in">List</span> data = <span class="built_in">List</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> initState() &#123;</span><br><span class="line">  fetchData();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> fetchData() <span class="keyword">async</span> &#123;</span><br><span class="line">  data = <span class="keyword">await</span> HttpUtil.<span class="keyword">get</span>();</span><br><span class="line"></span><br><span class="line">  setState(() &#123;&#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Widget build(BuildContext context) &#123;</span><br><span class="line">  <span class="keyword">return</span> ListContainer(</span><br><span class="line">    child: data.length&gt;<span class="number">0</span>?<span class="built_in">List</span>(</span><br><span class="line">      data: data,</span><br><span class="line">    ):<span class="keyword">null</span>,</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>总结自：<a href="https://dart.dev/codelabs/async-await" target="_blank" rel="noopener">https://dart.dev/codelabs/async-await</a></p>
+]]></content>
+      <categories>
+        <category>Flutter</category>
+      </categories>
+      <tags>
+        <tag>Flutter</tag>
+      </tags>
   </entry>
   <entry>
     <title>Flutter for Android走读</title>
@@ -330,48 +395,57 @@
       </tags>
   </entry>
   <entry>
-    <title>Google支付脱坑指南</title>
-    <url>/2018/12/20/Google%E6%94%AF%E4%BB%98%E8%84%B1%E5%9D%91%E6%8C%87%E5%8D%97/</url>
-    <content><![CDATA[<h2 id="背景">背景</h2>
-<p>本文主要介绍使用aidl方式接入google支付时遇到的坑以及注意事项</p>
+    <title>LruCache缓存图片研究小结</title>
+    <url>/2018/12/20/LruCache%E7%BC%93%E5%AD%98%E5%9B%BE%E7%89%87%E7%A0%94%E7%A9%B6%E5%B0%8F%E7%BB%93/</url>
+    <content><![CDATA[<h2 id="前言">前言</h2>
+<p>上一篇研究了LinkedHashMap实现LRU策略，虽然通过上述方式来实现图片缓存可以优化内存的使用效率，但是这种方式也存在一些问题，例如，LinkedHashMap不是线程安全的，所以在操作时需要考虑线程安全问题。另外在缓存时，只能指定缓存数据条目的数量，不能指定缓存区的大小，如果需要缓存的图片都比较大，可能就会出现问题。</p>
+<p>其实在Android SDK 中已经为我们提供了一个实现LRU策略的cache类，LruCache类，这个类封装了LinkedHashMap并且解决了LinkedHashMap中存在的问题，今天我们以LruCache缓存图片为例研究下这个类。</p>
+<h2 id="lrucache">LruCache</h2>
+<p>有一点需要提前说明下，今天我们研究的是android.support.v4.util包中的LruCache类而不是android.util包中也有一个LruCache类，这点需要提前说明下，不然很容易蒙圈，因为这两个类中有些方法实现是不同的。</p>
+<p>首先我们看一下LruCache的成员变量，代码如下</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> LinkedHashMap&lt;K, V&gt; map;</span><br><span class="line">    </span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> size;<span class="comment">//当前容量</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> maxSize;<span class="comment">//最大容量</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> putCount;<span class="comment">//put的次数 </span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> createCount;<span class="comment">//create的次数 </span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> evictionCount;<span class="comment">//回收次数</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> hitCount;<span class="comment">//命中次数</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> missCount;<span class="comment">//丢失的次数</span></span><br></pre></td></tr></table></figure>
+<p>再看下构造方法。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">LruCache</span><span class="params">(<span class="keyword">int</span> maxSize)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (maxSize &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">	    <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"maxSize &lt;= 0"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">this</span>.maxSize = maxSize;</span><br><span class="line">	<span class="keyword">this</span>.map = <span class="keyword">new</span> LinkedHashMap&lt;K, V&gt;(<span class="number">0</span>, <span class="number">0.75f</span>, <span class="keyword">true</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在构造方法中初始化了maxSize和LinkedHashMap，并且LinkedHashMap为按照访问顺序排序（此部分请参照上一篇文章）。maxSize即为最大容量。</p>
+<p>前面提到LruCache可以指定缓存区大小，这怎么实现呢？其实，实现起来很简单只要在初始化的时候重写LruCache提供的sizeOf方法即可，代码如下。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> LRU_CACHE_SIZE = <span class="number">4</span> * <span class="number">1024</span> * <span class="number">1024</span>; <span class="comment">//4MB</span></span><br><span class="line">LruCache&lt;String,Bitmap&gt; lruCache=<span class="keyword">new</span> LruCache&lt;String,Bitmap&gt;(LRU_CACHE_SIZE) &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">int</span> <span class="title">sizeOf</span><span class="params">(String key, Bitmap value)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (value != <span class="keyword">null</span>)</span><br><span class="line">            <span class="keyword">return</span> value.getByteCount();</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>首先我们定义了LruCache的最大容量为4 * 1024 * 1024，即4M的空间，然后我们重写sizeOf方法，让这个方法返回Bitmap的字节数。为什么这样写就可以指定缓存区大大小呢？接下来我们看下比较重要的put和get方法，你就会明白了~</p>
+<p>首先看下put方法的源码。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> V <span class="title">put</span><span class="params">(K key, V value)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (key == <span class="keyword">null</span> || value == <span class="keyword">null</span>) &#123;</span><br><span class="line">	    <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException(<span class="string">"key == null || value == null"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	V previous;</span><br><span class="line">	<span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</span><br><span class="line">	    putCount++;</span><br><span class="line">	    size += safeSizeOf(key, value);</span><br><span class="line">	    previous = map.put(key, value);</span><br><span class="line">	    <span class="keyword">if</span> (previous != <span class="keyword">null</span>) &#123;</span><br><span class="line">	        size -= safeSizeOf(key, previous);</span><br><span class="line">	    &#125;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">if</span> (previous != <span class="keyword">null</span>) &#123;</span><br><span class="line">	    entryRemoved(<span class="keyword">false</span>, key, previous, value);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	trimToSize(maxSize);</span><br><span class="line">	<span class="keyword">return</span> previous;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在方法体中，我们发现当key或者value为空时会抛出异常，这部分和LinkedHashMap是不同的，说明LruCache类是不支持key或者value为空，并且在对map进行put操作时加了synchronized ，保证了线程安全。另外我们发现有如下操作</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">size += safeSizeOf(key, value);</span><br></pre></td></tr></table></figure>
+<p>这部分看上去像对size（当前容量）的累加，我们继续进入到safeSizeOf方法中</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">safeSizeOf</span><span class="params">(K key, V value)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">int</span> result = sizeOf(key, value);</span><br><span class="line">	<span class="keyword">if</span> (result &lt; <span class="number">0</span>) &#123;</span><br><span class="line">	    <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Negative size: "</span> + key + <span class="string">"="</span> + value);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这个方法中看到了之前重写sizeOf方法，看到这里我想大家就明白了。**我们之前重写sizeOf方法让它返回bitmap的字节数，而在put方法中会对每次put进来的bimap的字节数利用size进行累加，这样我们利用size和maxSize进行比较，就可以得知当前容量是否大于最大容量，当大于时就可以进行删除最近最少少用的资源的操作了。**另外sizeOf默认情况下是返回1的，所以如果不重写sizeOf方法，LruCache也是进行“计数”的。</p>
+<p>接着看put方法的代码，我们会发现如下操作。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">previous = map.put(key, value);</span><br><span class="line"><span class="keyword">if</span> (previous != <span class="keyword">null</span>) &#123;</span><br><span class="line">	size -= safeSizeOf(key, previous);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们都知道，在对一个hashmap进行put操作的时候 ，如果put的key-value键值对中的key已经存在与map中，新put的value会覆盖旧value，并且会返回旧value。如果key不存在于map中，则会返回null。这里利用previous获取返回值，如果previous不为空，则当前容量会减去previous的大小，这部分比较好理解，其实就是防止同一个key对应新旧value的大小的重复叠加。</p>
+<p>接着往下看，在previous不为空的时候，会调用 entryRemoved(false, key, previous, value) 方法，并且把previous传进去了，查看此方法，我们发现此方法并没有函数体，看来需要我们重写此方法。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">entryRemoved</span><span class="params">(<span class="keyword">boolean</span> evicted, K key, V oldValue, V newValue)</span></span></span><br></pre></td></tr></table></figure>
+<p>根据前面所讲，我们可以在初始化的时候重写这个方法，来释放掉一个key对应的旧value所占用的资源，代码如下</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">LruCache&lt;String,Bitmap&gt; lruCache=<span class="keyword">new</span> LruCache&lt;String,Bitmap&gt;(LRU_CACHE_SIZE) &#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">int</span> <span class="title">sizeOf</span><span class="params">(String key, Bitmap value)</span> </span>&#123;</span><br><span class="line">	    <span class="keyword">if</span> (value != <span class="keyword">null</span>)</span><br><span class="line">	        <span class="keyword">return</span> value.getByteCount();</span><br><span class="line">	    <span class="keyword">else</span></span><br><span class="line">	        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">entryRemoved</span><span class="params">(<span class="keyword">boolean</span> evicted, String key, Bitmap oldValue, Bitmap newValue)</span> </span>&#123;</span><br><span class="line">	    <span class="keyword">if</span>(evicted==<span class="keyword">false</span>&amp;&amp;oldValue！=<span class="keyword">null</span>)&#123;</span><br><span class="line">	        oldValue.recycle();<span class="comment">//释放bitmap资源</span></span><br><span class="line">	    &#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>看到这里，可能会有疑问，在什么方法里会进行删除最近最少的操作呢？接着看put方法我们会发现trimToSize方法，答案其实就在这个方法里面。代码如下</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">trimToSize</span><span class="params">(<span class="keyword">int</span> maxSize)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">while</span> (<span class="keyword">true</span>) &#123;<span class="comment">//不断循环删除linkedHashMap首元素，也就是最近最少访问的条目，直到size小于最大容量或者map中已经没有数据</span></span><br><span class="line">	    K key;</span><br><span class="line">	    V value;</span><br><span class="line">	    <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</span><br><span class="line">	        <span class="keyword">if</span> (size &lt; <span class="number">0</span> || (map.isEmpty() &amp;&amp; size != <span class="number">0</span>)) &#123;</span><br><span class="line">	            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(getClass().getName()</span><br><span class="line">	                    + <span class="string">".sizeOf() is reporting inconsistent results!"</span>);</span><br><span class="line">	        &#125;</span><br><span class="line">	</span><br><span class="line">	        <span class="keyword">if</span> (size &lt;= maxSize || map.isEmpty()) &#123;<span class="comment">//直到当前容量小于最大容量 </span></span><br><span class="line">	            <span class="keyword">break</span>;</span><br><span class="line">	        &#125;</span><br><span class="line">	</span><br><span class="line">	        Map.Entry&lt;K, V&gt; toEvict = map.entrySet().iterator().next();<span class="comment">//指向首元素</span></span><br><span class="line">	        key = toEvict.getKey();</span><br><span class="line">	        value = toEvict.getValue();</span><br><span class="line">	        map.remove(key);<span class="comment">//删除最近最少的entry</span></span><br><span class="line">	        size -= safeSizeOf(key, value);</span><br><span class="line">	        evictionCount++;</span><br><span class="line">	    &#125;</span><br><span class="line">	</span><br><span class="line">	    entryRemoved(<span class="keyword">true</span>, key, value, <span class="keyword">null</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>观察方法体我们发现，当当前容量大于最大容量时，会不断删除首元素即最近最少访问的元素，然后重新计算当前容量大小。只有在当前容量小于最大容量或者map中没有数据的时候才会break出去。在代码的最后也会调用一次entryRemoved(true, key, value, null)方法，并且把因为空间不足而删除的元素的key和value传递进去，不过第一参数为true有别与先前调用时传递的false，所以根据第一参数区别我们就可以进行一些不一样的操作。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">entryRemoved</span><span class="params">(<span class="keyword">boolean</span> evicted, String key, Bitmap oldValue, Bitmap newValue)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(evicted==<span class="keyword">false</span>&amp;&amp;oldValue!=<span class="keyword">null</span>)&#123;</span><br><span class="line">	    oldValue.recycle();</span><br><span class="line">	&#125;<span class="keyword">if</span>(evicted==<span class="keyword">true</span>&amp;&amp;oldValue!=<span class="keyword">null</span>)&#123;</span><br><span class="line">	    <span class="comment">//TODO 根据key value 进行二级缓存</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>好了，put方法说明的比较详细，相信大家已经有了比较深的了解，接下来get方法我们加快点节奏。get方法源码如下</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> V <span class="title">get</span><span class="params">(K key)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (key == <span class="keyword">null</span>) &#123;<span class="comment">//key 不允许为空</span></span><br><span class="line">	    <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException(<span class="string">"key == null"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	V mapValue;</span><br><span class="line">	<span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</span><br><span class="line">	    mapValue = map.get(key);</span><br><span class="line">	    <span class="keyword">if</span> (mapValue != <span class="keyword">null</span>) &#123;</span><br><span class="line">	        hitCount++;</span><br><span class="line">	        <span class="keyword">return</span> mapValue;</span><br><span class="line">	    &#125;</span><br><span class="line">	    missCount++;</span><br><span class="line">	&#125;</span><br><span class="line">	    </span><br><span class="line">	V createdValue = create(key);<span class="comment">//根据key进行新建</span></span><br><span class="line">	<span class="keyword">if</span> (createdValue == <span class="keyword">null</span>) &#123;</span><br><span class="line">	    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</span><br><span class="line">	    createCount++;</span><br><span class="line">	    mapValue = map.put(key, createdValue);</span><br><span class="line">	</span><br><span class="line">	    <span class="keyword">if</span> (mapValue != <span class="keyword">null</span>) &#123;<span class="comment">//有返回值，说明key对应value已存在，需要进行重现赋值，即取消上一步操作</span></span><br><span class="line">	        map.put(key, mapValue);</span><br><span class="line">	    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">	        size += safeSizeOf(key, createdValue);</span><br><span class="line">	    &#125;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">if</span> (mapValue != <span class="keyword">null</span>) &#123;</span><br><span class="line">	    entryRemoved(<span class="keyword">false</span>, key, createdValue, mapValue);<span class="comment">//可以释放刚创建的createdValue</span></span><br><span class="line">	    <span class="keyword">return</span> mapValue;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">	    trimToSize(maxSize);</span><br><span class="line">	    <span class="keyword">return</span> createdValue;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>观察代码，我们发现其实lrucache方法中主要是对linkedhashmap进行get操作，这部分不清除的同学可以看下上一篇关于linkedhashmap的研究总结。我们重点研究下通过key获取到的value为空时的case。观察代码，如果如果出现上述情况，会新建一个createdValue,并且把createdValue put到map中，利用mapValue 获取put返回值，继续判断mapValue 是否为空，如果mapValue 不为空说明此时此key在map中存在对应的value,所以接下来需要进行重新赋值，让key对应的value为mapValue 而不是createdValue。如果mapValue为空，说明key对应的value确实为空，需要进行就是重新计算当前size的大小。在代码的最后会判断mapValue是否为空，如果mapValue不为空的时候，会调用entryRemoved方法，并把createdValue放在oldvalue的位置，因为此时createdValue所占的资源是无用的，所以我们可以在entryRemoved中释放createdValue。如果mapValue不为空又会进入到trimToSize方法中进行容量计算和删除“最近最少”。</p>
+<p>好了，get也方法讲完了，最后看下remove方法。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> V <span class="title">remove</span><span class="params">(K key)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (key == <span class="keyword">null</span>) &#123;</span><br><span class="line">	    <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException(<span class="string">"key == null"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	V previous;</span><br><span class="line">	<span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</span><br><span class="line">	    previous = map.remove(key);</span><br><span class="line">	    <span class="keyword">if</span> (previous != <span class="keyword">null</span>) &#123;</span><br><span class="line">	        size -= safeSizeOf(key, previous);</span><br><span class="line">	    &#125;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">if</span> (previous != <span class="keyword">null</span>) &#123;</span><br><span class="line">	    entryRemoved(<span class="keyword">false</span>, key, previous, <span class="keyword">null</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">return</span> previous;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>观察代码，基本上和get和put有异曲同工之妙，在这里就不重复阐述了。</p>
+<h2 id="总结">总结</h2>
+<p>比较重要的方法都讲完了，到此大家对lrucache应该有了一个全面的了解了吧~~接下来我们稍微总结下lrucache吧！</p>
 <ul>
-<li>接入google pay的官方文档：<a href="https://developer.android.com/google/play/billing/index.html" target="_blank" rel="noopener">https://developer.android.com/google/play/billing/index.html</a></li>
-<li>官方示例：<a href="https://github.com/googlesamples/android-play-billing" target="_blank" rel="noopener">https://github.com/googlesamples/android-play-billing</a></li>
-</ul>
-<p>结合文档与Demo对内购应该会有一个比较全面的理解。</p>
-<h2 id="坑与解">坑与解</h2>
-<ul>
-<li>
-<p>官方Demo中是在客户端中做了支付结果的校验，但推荐支付校验最好是放在服务端中处理。因为支付校验时需要利用专属的app_key，如果放在客户端有一定安全性风险。</p>
-</li>
-<li>
-<p>在测试google pay的时候需要在developer console后台中创建一个beta或者alpha版本的应用，并且需要上传一个签名的apk，当然前提条件是必须要花25美金申请一个谷歌开发账号。另外需要注意的是此apk必须包含<code>&lt;uses-permission android:name=&quot;com.android.vending.BILLING&quot; /&gt;</code>权限，即内购权限。</p>
-</li>
-<li>
-<p>当应用处于beta、alpha状态时，只有授权的测试者账号（google 账号）才能在google play中下载此apk。在下图1的地方进行添加测试者操作，添加完成后将2的链接分享给测试者，测试者进行授权操作便可以在google play中下载此apk
-<img src="/2018/12/20/Google支付脱坑指南/20170401173134262.png" alt="123">
-可能有的同学会问，那岂不是每次做一些改动是必须重新上传apk然后下载，再进行测试？其实只要保证运行的apk签名与developer console上传的apk签名一致，包名一致，版本号与版本名是上传过的版本号与版本名即可。上传过的版本号和版本名怎么理解呢？
-<img src="/2018/12/20/Google支付脱坑指南/20170401173204247.png" alt>
-举个例子如上图，我上传过两个版本，老版本version code=10 、verison name=1.5.3，新版本version code=11 verison name=1.5.3，只要本地运行apk的verison code、version name在上传过的各个版本之中就可以正常测试，如果随便写不存在version code、version name是无法正常调起的支付的。
-需要注意的是Android Studio直接运行的签名是默认debug，要保持与 developer console 签名一致可以手动配置debug签名，这样直接通过 Android Studio 运行就可以直接进行支付测试。</p>
-</li>
-<li>
-<p>可以利用google提供的特有的商品id进行静态响应测试，静态相应测试无需进行支付。</p>
-</li>
-<li>
-<p>配置商品时需要注意的坑就是要将配置完成的商品状态改为<strong>激活状态</strong>，不然进行支付时一直提示需要登录。</p>
-</li>
-<li>
-<p>进行真实测试时，测试的google账号必须绑定有海外购买能力的信用卡或者paypal。</p>
-</li>
-<li>
-<p>不比担心花销，只要在developer console中配置测试账号，就可以进行真实测试但不会真的扣钱。配置的地方如下图。
-<img src="/2018/12/20/Google支付脱坑指南/20170401173457771.png" alt></p>
-</li>
+<li>LruCache封装了LinkedHashMap，提供了LRU缓存的功能，并且在关键操作加了synchronized ，实现了线程安全。</li>
+<li>LruCache提供了trimToSize方法，当容量不足时会自动删除最近最少访问的键值对。</li>
+<li>LruCache提供了entryRemoved(boolean evicted, K key, V oldValue, V newValue)方法,通过重写这个方，结合put,get,remove方法我们可以做更多的事情。</li>
+<li>LruCache不允许空键值；</li>
+<li>LruCache提供了sizeof方法，重写这个方法可以实现指定缓存区大小，而不是像LinkedHashMap一样只能指定缓存条目数。</li>
 </ul>
 ]]></content>
       <categories>
-        <category>脱坑指北</category>
+        <category>安卓笔记</category>
       </categories>
   </entry>
   <entry>
@@ -469,6 +543,56 @@
 ]]></content>
   </entry>
   <entry>
+    <title>React Hook</title>
+    <url>/2022/07/28/React-Hook/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Google支付脱坑指南</title>
+    <url>/2018/12/20/Google%E6%94%AF%E4%BB%98%E8%84%B1%E5%9D%91%E6%8C%87%E5%8D%97/</url>
+    <content><![CDATA[<h2 id="背景">背景</h2>
+<p>本文主要介绍使用aidl方式接入google支付时遇到的坑以及注意事项</p>
+<ul>
+<li>接入google pay的官方文档：<a href="https://developer.android.com/google/play/billing/index.html" target="_blank" rel="noopener">https://developer.android.com/google/play/billing/index.html</a></li>
+<li>官方示例：<a href="https://github.com/googlesamples/android-play-billing" target="_blank" rel="noopener">https://github.com/googlesamples/android-play-billing</a></li>
+</ul>
+<p>结合文档与Demo对内购应该会有一个比较全面的理解。</p>
+<h2 id="坑与解">坑与解</h2>
+<ul>
+<li>
+<p>官方Demo中是在客户端中做了支付结果的校验，但推荐支付校验最好是放在服务端中处理。因为支付校验时需要利用专属的app_key，如果放在客户端有一定安全性风险。</p>
+</li>
+<li>
+<p>在测试google pay的时候需要在developer console后台中创建一个beta或者alpha版本的应用，并且需要上传一个签名的apk，当然前提条件是必须要花25美金申请一个谷歌开发账号。另外需要注意的是此apk必须包含<code>&lt;uses-permission android:name=&quot;com.android.vending.BILLING&quot; /&gt;</code>权限，即内购权限。</p>
+</li>
+<li>
+<p>当应用处于beta、alpha状态时，只有授权的测试者账号（google 账号）才能在google play中下载此apk。在下图1的地方进行添加测试者操作，添加完成后将2的链接分享给测试者，测试者进行授权操作便可以在google play中下载此apk
+<img src="/2018/12/20/Google支付脱坑指南/20170401173134262.png" alt="123">
+可能有的同学会问，那岂不是每次做一些改动是必须重新上传apk然后下载，再进行测试？其实只要保证运行的apk签名与developer console上传的apk签名一致，包名一致，版本号与版本名是上传过的版本号与版本名即可。上传过的版本号和版本名怎么理解呢？
+<img src="/2018/12/20/Google支付脱坑指南/20170401173204247.png" alt>
+举个例子如上图，我上传过两个版本，老版本version code=10 、verison name=1.5.3，新版本version code=11 verison name=1.5.3，只要本地运行apk的verison code、version name在上传过的各个版本之中就可以正常测试，如果随便写不存在version code、version name是无法正常调起的支付的。
+需要注意的是Android Studio直接运行的签名是默认debug，要保持与 developer console 签名一致可以手动配置debug签名，这样直接通过 Android Studio 运行就可以直接进行支付测试。</p>
+</li>
+<li>
+<p>可以利用google提供的特有的商品id进行静态响应测试，静态相应测试无需进行支付。</p>
+</li>
+<li>
+<p>配置商品时需要注意的坑就是要将配置完成的商品状态改为<strong>激活状态</strong>，不然进行支付时一直提示需要登录。</p>
+</li>
+<li>
+<p>进行真实测试时，测试的google账号必须绑定有海外购买能力的信用卡或者paypal。</p>
+</li>
+<li>
+<p>不比担心花销，只要在developer console中配置测试账号，就可以进行真实测试但不会真的扣钱。配置的地方如下图。
+<img src="/2018/12/20/Google支付脱坑指南/20170401173457771.png" alt></p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>脱坑指北</category>
+      </categories>
+  </entry>
+  <entry>
     <title>H5微信支付webview设置referer无效问题</title>
     <url>/2018/12/21/H5%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98webview%E8%AE%BE%E7%BD%AEreferer%E6%97%A0%E6%95%88%E9%97%AE%E9%A2%98/</url>
     <content><![CDATA[<h2 id="背景">背景</h2>
@@ -488,130 +612,6 @@
 ]]></content>
       <categories>
         <category>脱坑指北</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>React Hook</title>
-    <url>/2022/07/28/React-Hook/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>LruCache缓存图片研究小结</title>
-    <url>/2018/12/20/LruCache%E7%BC%93%E5%AD%98%E5%9B%BE%E7%89%87%E7%A0%94%E7%A9%B6%E5%B0%8F%E7%BB%93/</url>
-    <content><![CDATA[<h2 id="前言">前言</h2>
-<p>上一篇研究了LinkedHashMap实现LRU策略，虽然通过上述方式来实现图片缓存可以优化内存的使用效率，但是这种方式也存在一些问题，例如，LinkedHashMap不是线程安全的，所以在操作时需要考虑线程安全问题。另外在缓存时，只能指定缓存数据条目的数量，不能指定缓存区的大小，如果需要缓存的图片都比较大，可能就会出现问题。</p>
-<p>其实在Android SDK 中已经为我们提供了一个实现LRU策略的cache类，LruCache类，这个类封装了LinkedHashMap并且解决了LinkedHashMap中存在的问题，今天我们以LruCache缓存图片为例研究下这个类。</p>
-<h2 id="lrucache">LruCache</h2>
-<p>有一点需要提前说明下，今天我们研究的是android.support.v4.util包中的LruCache类而不是android.util包中也有一个LruCache类，这点需要提前说明下，不然很容易蒙圈，因为这两个类中有些方法实现是不同的。</p>
-<p>首先我们看一下LruCache的成员变量，代码如下</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> LinkedHashMap&lt;K, V&gt; map;</span><br><span class="line">    </span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> size;<span class="comment">//当前容量</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> maxSize;<span class="comment">//最大容量</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> putCount;<span class="comment">//put的次数 </span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> createCount;<span class="comment">//create的次数 </span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> evictionCount;<span class="comment">//回收次数</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> hitCount;<span class="comment">//命中次数</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> missCount;<span class="comment">//丢失的次数</span></span><br></pre></td></tr></table></figure>
-<p>再看下构造方法。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">LruCache</span><span class="params">(<span class="keyword">int</span> maxSize)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (maxSize &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">	    <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"maxSize &lt;= 0"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">this</span>.maxSize = maxSize;</span><br><span class="line">	<span class="keyword">this</span>.map = <span class="keyword">new</span> LinkedHashMap&lt;K, V&gt;(<span class="number">0</span>, <span class="number">0.75f</span>, <span class="keyword">true</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在构造方法中初始化了maxSize和LinkedHashMap，并且LinkedHashMap为按照访问顺序排序（此部分请参照上一篇文章）。maxSize即为最大容量。</p>
-<p>前面提到LruCache可以指定缓存区大小，这怎么实现呢？其实，实现起来很简单只要在初始化的时候重写LruCache提供的sizeOf方法即可，代码如下。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> LRU_CACHE_SIZE = <span class="number">4</span> * <span class="number">1024</span> * <span class="number">1024</span>; <span class="comment">//4MB</span></span><br><span class="line">LruCache&lt;String,Bitmap&gt; lruCache=<span class="keyword">new</span> LruCache&lt;String,Bitmap&gt;(LRU_CACHE_SIZE) &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">int</span> <span class="title">sizeOf</span><span class="params">(String key, Bitmap value)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (value != <span class="keyword">null</span>)</span><br><span class="line">            <span class="keyword">return</span> value.getByteCount();</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>首先我们定义了LruCache的最大容量为4 * 1024 * 1024，即4M的空间，然后我们重写sizeOf方法，让这个方法返回Bitmap的字节数。为什么这样写就可以指定缓存区大大小呢？接下来我们看下比较重要的put和get方法，你就会明白了~</p>
-<p>首先看下put方法的源码。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> V <span class="title">put</span><span class="params">(K key, V value)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (key == <span class="keyword">null</span> || value == <span class="keyword">null</span>) &#123;</span><br><span class="line">	    <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException(<span class="string">"key == null || value == null"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	V previous;</span><br><span class="line">	<span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</span><br><span class="line">	    putCount++;</span><br><span class="line">	    size += safeSizeOf(key, value);</span><br><span class="line">	    previous = map.put(key, value);</span><br><span class="line">	    <span class="keyword">if</span> (previous != <span class="keyword">null</span>) &#123;</span><br><span class="line">	        size -= safeSizeOf(key, previous);</span><br><span class="line">	    &#125;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">if</span> (previous != <span class="keyword">null</span>) &#123;</span><br><span class="line">	    entryRemoved(<span class="keyword">false</span>, key, previous, value);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	trimToSize(maxSize);</span><br><span class="line">	<span class="keyword">return</span> previous;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在方法体中，我们发现当key或者value为空时会抛出异常，这部分和LinkedHashMap是不同的，说明LruCache类是不支持key或者value为空，并且在对map进行put操作时加了synchronized ，保证了线程安全。另外我们发现有如下操作</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">size += safeSizeOf(key, value);</span><br></pre></td></tr></table></figure>
-<p>这部分看上去像对size（当前容量）的累加，我们继续进入到safeSizeOf方法中</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">safeSizeOf</span><span class="params">(K key, V value)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">int</span> result = sizeOf(key, value);</span><br><span class="line">	<span class="keyword">if</span> (result &lt; <span class="number">0</span>) &#123;</span><br><span class="line">	    <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Negative size: "</span> + key + <span class="string">"="</span> + value);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在这个方法中看到了之前重写sizeOf方法，看到这里我想大家就明白了。**我们之前重写sizeOf方法让它返回bitmap的字节数，而在put方法中会对每次put进来的bimap的字节数利用size进行累加，这样我们利用size和maxSize进行比较，就可以得知当前容量是否大于最大容量，当大于时就可以进行删除最近最少少用的资源的操作了。**另外sizeOf默认情况下是返回1的，所以如果不重写sizeOf方法，LruCache也是进行“计数”的。</p>
-<p>接着看put方法的代码，我们会发现如下操作。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">previous = map.put(key, value);</span><br><span class="line"><span class="keyword">if</span> (previous != <span class="keyword">null</span>) &#123;</span><br><span class="line">	size -= safeSizeOf(key, previous);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>我们都知道，在对一个hashmap进行put操作的时候 ，如果put的key-value键值对中的key已经存在与map中，新put的value会覆盖旧value，并且会返回旧value。如果key不存在于map中，则会返回null。这里利用previous获取返回值，如果previous不为空，则当前容量会减去previous的大小，这部分比较好理解，其实就是防止同一个key对应新旧value的大小的重复叠加。</p>
-<p>接着往下看，在previous不为空的时候，会调用 entryRemoved(false, key, previous, value) 方法，并且把previous传进去了，查看此方法，我们发现此方法并没有函数体，看来需要我们重写此方法。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">entryRemoved</span><span class="params">(<span class="keyword">boolean</span> evicted, K key, V oldValue, V newValue)</span></span></span><br></pre></td></tr></table></figure>
-<p>根据前面所讲，我们可以在初始化的时候重写这个方法，来释放掉一个key对应的旧value所占用的资源，代码如下</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">LruCache&lt;String,Bitmap&gt; lruCache=<span class="keyword">new</span> LruCache&lt;String,Bitmap&gt;(LRU_CACHE_SIZE) &#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">int</span> <span class="title">sizeOf</span><span class="params">(String key, Bitmap value)</span> </span>&#123;</span><br><span class="line">	    <span class="keyword">if</span> (value != <span class="keyword">null</span>)</span><br><span class="line">	        <span class="keyword">return</span> value.getByteCount();</span><br><span class="line">	    <span class="keyword">else</span></span><br><span class="line">	        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">entryRemoved</span><span class="params">(<span class="keyword">boolean</span> evicted, String key, Bitmap oldValue, Bitmap newValue)</span> </span>&#123;</span><br><span class="line">	    <span class="keyword">if</span>(evicted==<span class="keyword">false</span>&amp;&amp;oldValue！=<span class="keyword">null</span>)&#123;</span><br><span class="line">	        oldValue.recycle();<span class="comment">//释放bitmap资源</span></span><br><span class="line">	    &#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>看到这里，可能会有疑问，在什么方法里会进行删除最近最少的操作呢？接着看put方法我们会发现trimToSize方法，答案其实就在这个方法里面。代码如下</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">trimToSize</span><span class="params">(<span class="keyword">int</span> maxSize)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">while</span> (<span class="keyword">true</span>) &#123;<span class="comment">//不断循环删除linkedHashMap首元素，也就是最近最少访问的条目，直到size小于最大容量或者map中已经没有数据</span></span><br><span class="line">	    K key;</span><br><span class="line">	    V value;</span><br><span class="line">	    <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</span><br><span class="line">	        <span class="keyword">if</span> (size &lt; <span class="number">0</span> || (map.isEmpty() &amp;&amp; size != <span class="number">0</span>)) &#123;</span><br><span class="line">	            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(getClass().getName()</span><br><span class="line">	                    + <span class="string">".sizeOf() is reporting inconsistent results!"</span>);</span><br><span class="line">	        &#125;</span><br><span class="line">	</span><br><span class="line">	        <span class="keyword">if</span> (size &lt;= maxSize || map.isEmpty()) &#123;<span class="comment">//直到当前容量小于最大容量 </span></span><br><span class="line">	            <span class="keyword">break</span>;</span><br><span class="line">	        &#125;</span><br><span class="line">	</span><br><span class="line">	        Map.Entry&lt;K, V&gt; toEvict = map.entrySet().iterator().next();<span class="comment">//指向首元素</span></span><br><span class="line">	        key = toEvict.getKey();</span><br><span class="line">	        value = toEvict.getValue();</span><br><span class="line">	        map.remove(key);<span class="comment">//删除最近最少的entry</span></span><br><span class="line">	        size -= safeSizeOf(key, value);</span><br><span class="line">	        evictionCount++;</span><br><span class="line">	    &#125;</span><br><span class="line">	</span><br><span class="line">	    entryRemoved(<span class="keyword">true</span>, key, value, <span class="keyword">null</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>观察方法体我们发现，当当前容量大于最大容量时，会不断删除首元素即最近最少访问的元素，然后重新计算当前容量大小。只有在当前容量小于最大容量或者map中没有数据的时候才会break出去。在代码的最后也会调用一次entryRemoved(true, key, value, null)方法，并且把因为空间不足而删除的元素的key和value传递进去，不过第一参数为true有别与先前调用时传递的false，所以根据第一参数区别我们就可以进行一些不一样的操作。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">entryRemoved</span><span class="params">(<span class="keyword">boolean</span> evicted, String key, Bitmap oldValue, Bitmap newValue)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(evicted==<span class="keyword">false</span>&amp;&amp;oldValue!=<span class="keyword">null</span>)&#123;</span><br><span class="line">	    oldValue.recycle();</span><br><span class="line">	&#125;<span class="keyword">if</span>(evicted==<span class="keyword">true</span>&amp;&amp;oldValue!=<span class="keyword">null</span>)&#123;</span><br><span class="line">	    <span class="comment">//TODO 根据key value 进行二级缓存</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>好了，put方法说明的比较详细，相信大家已经有了比较深的了解，接下来get方法我们加快点节奏。get方法源码如下</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> V <span class="title">get</span><span class="params">(K key)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (key == <span class="keyword">null</span>) &#123;<span class="comment">//key 不允许为空</span></span><br><span class="line">	    <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException(<span class="string">"key == null"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	V mapValue;</span><br><span class="line">	<span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</span><br><span class="line">	    mapValue = map.get(key);</span><br><span class="line">	    <span class="keyword">if</span> (mapValue != <span class="keyword">null</span>) &#123;</span><br><span class="line">	        hitCount++;</span><br><span class="line">	        <span class="keyword">return</span> mapValue;</span><br><span class="line">	    &#125;</span><br><span class="line">	    missCount++;</span><br><span class="line">	&#125;</span><br><span class="line">	    </span><br><span class="line">	V createdValue = create(key);<span class="comment">//根据key进行新建</span></span><br><span class="line">	<span class="keyword">if</span> (createdValue == <span class="keyword">null</span>) &#123;</span><br><span class="line">	    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</span><br><span class="line">	    createCount++;</span><br><span class="line">	    mapValue = map.put(key, createdValue);</span><br><span class="line">	</span><br><span class="line">	    <span class="keyword">if</span> (mapValue != <span class="keyword">null</span>) &#123;<span class="comment">//有返回值，说明key对应value已存在，需要进行重现赋值，即取消上一步操作</span></span><br><span class="line">	        map.put(key, mapValue);</span><br><span class="line">	    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">	        size += safeSizeOf(key, createdValue);</span><br><span class="line">	    &#125;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">if</span> (mapValue != <span class="keyword">null</span>) &#123;</span><br><span class="line">	    entryRemoved(<span class="keyword">false</span>, key, createdValue, mapValue);<span class="comment">//可以释放刚创建的createdValue</span></span><br><span class="line">	    <span class="keyword">return</span> mapValue;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">	    trimToSize(maxSize);</span><br><span class="line">	    <span class="keyword">return</span> createdValue;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>观察代码，我们发现其实lrucache方法中主要是对linkedhashmap进行get操作，这部分不清除的同学可以看下上一篇关于linkedhashmap的研究总结。我们重点研究下通过key获取到的value为空时的case。观察代码，如果如果出现上述情况，会新建一个createdValue,并且把createdValue put到map中，利用mapValue 获取put返回值，继续判断mapValue 是否为空，如果mapValue 不为空说明此时此key在map中存在对应的value,所以接下来需要进行重新赋值，让key对应的value为mapValue 而不是createdValue。如果mapValue为空，说明key对应的value确实为空，需要进行就是重新计算当前size的大小。在代码的最后会判断mapValue是否为空，如果mapValue不为空的时候，会调用entryRemoved方法，并把createdValue放在oldvalue的位置，因为此时createdValue所占的资源是无用的，所以我们可以在entryRemoved中释放createdValue。如果mapValue不为空又会进入到trimToSize方法中进行容量计算和删除“最近最少”。</p>
-<p>好了，get也方法讲完了，最后看下remove方法。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> V <span class="title">remove</span><span class="params">(K key)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (key == <span class="keyword">null</span>) &#123;</span><br><span class="line">	    <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException(<span class="string">"key == null"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	V previous;</span><br><span class="line">	<span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</span><br><span class="line">	    previous = map.remove(key);</span><br><span class="line">	    <span class="keyword">if</span> (previous != <span class="keyword">null</span>) &#123;</span><br><span class="line">	        size -= safeSizeOf(key, previous);</span><br><span class="line">	    &#125;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">if</span> (previous != <span class="keyword">null</span>) &#123;</span><br><span class="line">	    entryRemoved(<span class="keyword">false</span>, key, previous, <span class="keyword">null</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">return</span> previous;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>观察代码，基本上和get和put有异曲同工之妙，在这里就不重复阐述了。</p>
-<h2 id="总结">总结</h2>
-<p>比较重要的方法都讲完了，到此大家对lrucache应该有了一个全面的了解了吧~~接下来我们稍微总结下lrucache吧！</p>
-<ul>
-<li>LruCache封装了LinkedHashMap，提供了LRU缓存的功能，并且在关键操作加了synchronized ，实现了线程安全。</li>
-<li>LruCache提供了trimToSize方法，当容量不足时会自动删除最近最少访问的键值对。</li>
-<li>LruCache提供了entryRemoved(boolean evicted, K key, V oldValue, V newValue)方法,通过重写这个方，结合put,get,remove方法我们可以做更多的事情。</li>
-<li>LruCache不允许空键值；</li>
-<li>LruCache提供了sizeof方法，重写这个方法可以实现指定缓存区大小，而不是像LinkedHashMap一样只能指定缓存条目数。</li>
-</ul>
-]]></content>
-      <categories>
-        <category>安卓笔记</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>FPS监控调研</title>
-    <url>/2023/11/27/FPS%E7%9B%91%E6%8E%A7%E8%B0%83%E7%A0%94/</url>
-    <content><![CDATA[<h1>定义</h1>
-<p>某段连续时间 deltT 内渲染完成的帧数 n，那么 n / deltT 就是帧率（Frames Per Second）。</p>
-<h1>四种方式</h1>
-<p>Android没有提供直接获取帧率的方法，而是直接或者间接的提供了获取每一帧渲染耗时的功能，经过二次计算后得到帧率。</p>
-<ul>
-<li>SurfaceFlinger</li>
-<li>Gfxinfo</li>
-<li>FrameMetrics</li>
-<li>Choreographer</li>
-</ul>
-<h2 id="surfaceflinger">SurfaceFlinger</h2>
-<p>SurfaceFlinger服务运行在Android系统的System进程中，它负责管理Android系统的帧缓冲区（Frame Buffer），绘制应用程序的UI。Android应用程序会请求SurfaceFlinger服务创建Surface，在上面绘制自己的UI，然后将这个已经绘制好了UI的Surface渲染到设备显示屏上去。通过获取SurfaceFlinger的一些数据，我们可以计算出帧率。</p>
-<ul>
-<li>方法一：通过“<strong>adb shell dumpsys SurfaceFlinger --latency</strong>”命令，可以获得历史的127条帧绘制数据。</li>
-<li>方法二：通过“<strong>service call SurfaceFlinger 1013</strong>”获取帧数1，在经过deltT时间后再次通过这个命令获取帧数2，使用（帧数2-帧数1）/deltT即可计算出帧率。</li>
-</ul>
-<p>优点：计算帧率的一个周期报过了CPU和GPU的渲染实现，所以计算结果准确</p>
-<p>缺点：只能通过adb使用，没办法用于线上</p>
-<h2 id="gfxinfo">Gfxinfo</h2>
-<p>我们平常通过[设置]-&gt;[开发者选项]-&gt;[GPU呈现模式分析] -&gt;[在屏幕上显示为条形图] 这样的方式来观察页面的绘制情况，而“gfxinfo”命令就是将条形图数字化了。</p>
-<p>在 5.0 上执行 gfxinfo 命令，得到的即为渲染一帧所经过的各个阶段的耗时情况：</p>
-<p><strong>Draw: 表示在Java中创建显示列表部分中，OnDraw()方法占用的时间。</strong></p>
-<p><strong>Process：表示渲染引擎执行显示列表所花的时间，view越多，时间就越长</strong></p>
-<p><strong>Execute：表示把一帧数据发送到屏幕上排版显示实际花费的时间。其实是实际显示帧数据的后台缓存区与前台缓冲区交换后并将前台缓冲区的内容显示到屏幕上的时间。</strong></p>
-<p><strong>Draw + Process + Execute = 完整显示一帧 ，这个时间要小于16ms才能保证每秒60帧。</strong></p>
-<p>优点：计算帧率的一个周期报过了CPU和GPU的渲染实现，所以计算结果准确</p>
-<p>缺点：这个命令可以在代码中通过反射的方式获取到数据，但是需要用户<strong>手动</strong>的在[设置]-&gt;[开发者选项]-&gt;[GPU呈现模式分析] -&gt;[在屏幕上显示为条形图] /[显示在adb shell dumpsys gfxinfo中]</p>
-<h2 id="framemetrics">FrameMetrics</h2>
-<p>虽然 FrameMetrics 与 Gfxinfo 的数据同源，但是二者在计算帧率时也有差别。FrameMetrics 获得的是单个帧的数据，正常情况下只能拿到渲染一帧的各个阶段的数据（加起来是该帧总耗时），但可以通过反射拿到FrameMetrics的mTimingData变量中的数据（该数据就是gfxinfo命令带framestats的结果）</p>
-<p>优点：官方推荐，计算方式简单，可以获得绘制的各个阶段的起始时间和耗时。</p>
-<p>缺点：api≥24</p>
-<h2 id="choreographer">Choreographer</h2>
-<p>Choreographer机制是Android 4.1加入的，用于同Vsync机制配合，实现统一调度界面绘图。一次屏幕刷新完成后，将产生 VSync 信号并通知 Choreographer。 Choreographer 收到通知依次处理 Input、Animation、Draw，这三个过程都是通过 FrameCallback 回调的方式完成的。在 Draw 过程中，具体是执行 ViewRootImpl#performTraversals() 方法，完成视图树的 measure、layout、draw 流程。 而 FrameCallback#doFrame(long frameTimeNanos) 方法中可以得到 VSync 到来的时间戳，这样就能得到连续两帧开始渲染之间的间隔，将该值近似作为上一帧的渲染耗时。 实现 FrameCallback 接口，并通过 Choreographer#postFrameCallback() 方法将其跟 Input、Animation、Draw 这些回调一起塞入主线程的消息队列，就能源源不断的获取每一帧的渲染时间戳，每一个 VSync 的时间戳代表一帧，这样可以得到某段时间内渲染完成的帧数，二者相除即可得到帧率。</p>
-<p>优点：计算方式简单</p>
-<p>缺点：</p>
-<p>在Android 5.0之后，由主线程和Render Thread 线程共同完成一帧的绘制，其中又分两种情况（具体见 <a href="https://www.jianshu.com/p/bc1c1d2fadd1" target="_blank" rel="noopener">Android5.0中 hwui 中 RenderThread 工作流程</a> 文尾表述）：</p>
-<ul>
-<li>主线程在完成第一帧自己负责的部分后交给 Render Thread 线程，然后自己马不停蹄的继续绘制第二帧；</li>
-<li>在完成第一帧自己负责的部分后交给 Render Thread 线程，然后等待 Render Thread 完成第一帧剩余的工作后在进行第二帧的绘制；</li>
-</ul>
-<p>一次滑动过程中，上述两种情况可能均存在，但是Choreographer只统计了主线程中的部分，而忽略了 Render 线程的部分，这样会导致得到的<strong>耗时偏小、帧率偏大</strong>。更进一步，既然一帧的绘制和渲染分布于两个线程， 那即使一帧的耗时综合大于 16.6 ms，只要位于 UI 线程部分的耗时不超过 16.6ms，那么就不影响 UI 线程绘制下一帧，但是会导致屏幕接着显示上一帧的内容，出现掉帧，而 Choreographer 仅凭帧耗时无法检测出这种掉帧。</p>
-<h1>总结与分析</h1>
-<p>Choreographer和FrameMetrics的方案比较容易实现，但是目前只采用了Choreographer方案收集数据。但就上面的调研结果来看，Choreographer的统计帧率偏大，另外Choreographer采用postFrameCallback()的方法是会源源不断的回调doFrame()方法（<strong>即使页面不在渲染</strong>），所以采用的是（连续时间内回调doFrame()方法的次数/这段时间）来计算帧率。而FrameMetrics只有<strong>在页面渲染</strong>的时候才会回调方法，所以采用的是（取回调方法中的渲染总耗时+之前的平均帧率*之前的回调次数）/当前回调次数来计算帧率。所以Choreographer和FrameMetrics之间的误差还在于当页面处于静止状态，不需要渲染时，Choreographer的计算结果会慢慢偏向于60帧，造成该页面整体流畅的假象。所以，采用FrameMetrics方案更准确。</p>
-<p>思考：</p>
-<p>一般来说，Choreographer和FrameMetrics方案都只是计算的平均FPS，平均值只能反应一组数据集中趋势的量数，但是平均值很容易受极值的影响，比如在一个滚动页面中，第一个页面FPS值较低，但是后续的页面FPS值很高，这样就会造成整体的平均FPS值偏高，发现不了存在的问题。所以思考能否引入多个指标来综合分析页面的流畅度？</p>
-<p>改进：</p>
-<p>新的改进方案中，引入了FPS方差、最多连续掉帧数、连续掉帧发生次数、掉帧率、严重掉帧率。</p>
-<p><strong>FPS方差</strong></p>
-<p>方差可以反应数据的波动性，用来度量数据的离散程度。那么对于上述例举的情况就能反映出来，整体的方差值偏大。</p>
-<p><strong>最多连续掉帧数</strong></p>
-<p>记录该页面内发生连续掉3帧及以上的现象，筛选出单次连续掉帧最多的一次。不管是平均值还是方差，都可能随着样本量的增多，导致某一个连续时间内的掉帧（某个view渲染耗时长）被忽视。记录最多连续掉帧数可以发现这种情况。</p>
-<p><strong>连续掉帧发生次数</strong></p>
-<p>记录该页面内发生连续掉3帧及以上现象的次数。用来发现是否页面内经常出现连续掉帧（某些view渲染耗时长导致）的情况。</p>
-<p><strong>掉帧率</strong></p>
-<p>记录帧率小于60的帧数，除以总的帧数。用来评估页面的流畅度。</p>
-<p><strong>严重掉帧率</strong></p>
-<p>记录帧率小于30的帧数，除以总的帧数。用来评估页面的流畅度。</p>
-]]></content>
-      <categories>
-        <category>安卓笔记</category>
       </categories>
   </entry>
   <entry>
@@ -658,60 +658,6 @@
       </categories>
       <tags>
         <tag>React Native</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>View的Invalidate流程</title>
-    <url>/2023/09/16/View%E7%9A%84Invalidate%E6%B5%81%E7%A8%8B/</url>
-    <content><![CDATA[<h1>前言</h1>
-<p>本文主要是整理下 View 执行 invalidate 方法的流程（软件绘制场景下）。</p>
-<h2 id="时序图">时序图</h2>
-<p>核心点是执行 view 的 doTraversal 之前会插入同步屏障，然后依赖 Choreographer postCallback 的监听系统的 vsync 信号，当信号到来时执行 doTraversal 方法，在此之后移除同步屏障，紧接着就是自顶向下执行 measure，layout，draw 方法。</p>
-<p><img src="/2023/09/16/View的Invalidate流程/invalidate%E6%B5%81%E7%A8%8B.png" alt></p>
-]]></content>
-      <categories>
-        <category>安卓笔记</category>
-      </categories>
-      <tags>
-        <tag>Android Framework</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>RecyclerView实现item多类型布局和跨列</title>
-    <url>/2018/12/21/RecyclerView%E5%AE%9E%E7%8E%B0item%E5%A4%9A%E7%B1%BB%E5%9E%8B%E5%B8%83%E5%B1%80%E5%92%8C%E8%B7%A8%E5%88%97/</url>
-    <content><![CDATA[<h2 id="背景">背景</h2>
-<p>本文主要简单记录下RecyclerView如何实现item多类型布局和item跨列。</p>
-<h2 id="item多类型布局">item多类型布局</h2>
-<p>首先为RecyclerView设置layoutManger，因为下文要说到跨列，所以这里选用GridLayoutManager。然后为GridLayoutManager设置初始列数，这里设置为两列，代码如下</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">manager = <span class="keyword">new</span> GridLayoutManager(<span class="keyword">this</span>, <span class="number">2</span>);</span><br><span class="line">recyclerView.setLayoutManager(manager);</span><br></pre></td></tr></table></figure>
-<p>接着重写RecyclerView对应adapter的getItemViewType方法，将item的类型标识作为此方法的返回</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getItemViewType</span><span class="params">(<span class="keyword">int</span> position)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> dataList.get(position).getItemType();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>然后在onCreateViewHolder方法中根据当前viewType的类型去返回对应的viewHolder</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> ViewHolder <span class="title">onCreateViewHolder</span><span class="params">(ViewGroup viewGroup, <span class="keyword">int</span> viewType)</span> </span>&#123;</span><br><span class="line">	View view = <span class="keyword">null</span>;</span><br><span class="line">	<span class="keyword">if</span> (viewType == ITEM_TYPE_1) &#123;</span><br><span class="line">	    view = View.inflate(mContext, R.layout.item_1, <span class="keyword">null</span>);</span><br><span class="line">	    <span class="keyword">return</span> <span class="keyword">new</span> ViewHolder1(view);</span><br><span class="line">	&#125; <span class="keyword">else</span> <span class="keyword">if</span> (viewType == ITEM_TYPE_2) &#123;</span><br><span class="line">	    view = View.inflate(mContext, R.layout.item_2, <span class="keyword">null</span>);</span><br><span class="line">	    <span class="keyword">return</span> <span class="keyword">new</span> ViewHolder2(view);</span><br><span class="line">	&#125; </span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">new</span> ViewHolder1(view);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>至此简单的item多类型布局就实现了。</p>
-<h2 id="item跨列">item跨列</h2>
-<p>item实现跨列主要通过重写GridLayoutManager的setSpanSizeLookup方法来实现，代码如下</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">gridLayoutManager.setSpanSizeLookup(<span class="keyword">new</span> GridLayoutManager.SpanSizeLookup() &#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getSpanSize</span><span class="params">(<span class="keyword">int</span> position)</span> </span>&#123;</span><br><span class="line">	    <span class="keyword">int</span> spanSize;</span><br><span class="line">	    <span class="keyword">if</span> (adapter.getItemViewType(position) == ITEM_TYPE_1) &#123;</span><br><span class="line">	        spanSize = <span class="number">2</span>;<span class="comment">//跨2列</span></span><br><span class="line">	    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (adapter.getItemViewType(position) == ITEM_TYPE_2) &#123;</span><br><span class="line">	        spanSize = <span class="number">1</span>;<span class="comment">//跨1列</span></span><br><span class="line">	    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">	        spanSize = <span class="number">2</span>;</span><br><span class="line">	    &#125;</span><br><span class="line">	    <span class="keyword">return</span> spanSize;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p>此处的spanSize即为需要跨的列数，这里通过当前布局类型来设置对应的spanSize，至此完成跨列。</p>
-]]></content>
-      <categories>
-        <category>安卓笔记</category>
-      </categories>
-      <tags>
-        <tag>RecyclerView</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Web缓存</title>
-    <url>/2022/08/15/Web%E7%BC%93%E5%AD%98/</url>
-    <content><![CDATA[<p>本文总结下Cookie &amp; Web Storage</p>
-<p><img src="/2022/08/15/Web缓存/web.png" alt></p>
-]]></content>
-      <categories>
-        <category>H5基础</category>
-      </categories>
-      <tags>
-        <tag>javascript</tag>
       </tags>
   </entry>
   <entry>
@@ -853,28 +799,38 @@ JS侧构建完Fiber Tree后，会将UI指令通过MessageQueue传递到Native侧
       </tags>
   </entry>
   <entry>
-    <title>Hello World</title>
-    <url>/2018/12/20/hello-world/</url>
-    <content><![CDATA[<p>Hello world!</p>
+    <title>RecyclerView实现item多类型布局和跨列</title>
+    <url>/2018/12/21/RecyclerView%E5%AE%9E%E7%8E%B0item%E5%A4%9A%E7%B1%BB%E5%9E%8B%E5%B8%83%E5%B1%80%E5%92%8C%E8%B7%A8%E5%88%97/</url>
+    <content><![CDATA[<h2 id="背景">背景</h2>
+<p>本文主要简单记录下RecyclerView如何实现item多类型布局和item跨列。</p>
+<h2 id="item多类型布局">item多类型布局</h2>
+<p>首先为RecyclerView设置layoutManger，因为下文要说到跨列，所以这里选用GridLayoutManager。然后为GridLayoutManager设置初始列数，这里设置为两列，代码如下</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">manager = <span class="keyword">new</span> GridLayoutManager(<span class="keyword">this</span>, <span class="number">2</span>);</span><br><span class="line">recyclerView.setLayoutManager(manager);</span><br></pre></td></tr></table></figure>
+<p>接着重写RecyclerView对应adapter的getItemViewType方法，将item的类型标识作为此方法的返回</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getItemViewType</span><span class="params">(<span class="keyword">int</span> position)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> dataList.get(position).getItemType();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后在onCreateViewHolder方法中根据当前viewType的类型去返回对应的viewHolder</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> ViewHolder <span class="title">onCreateViewHolder</span><span class="params">(ViewGroup viewGroup, <span class="keyword">int</span> viewType)</span> </span>&#123;</span><br><span class="line">	View view = <span class="keyword">null</span>;</span><br><span class="line">	<span class="keyword">if</span> (viewType == ITEM_TYPE_1) &#123;</span><br><span class="line">	    view = View.inflate(mContext, R.layout.item_1, <span class="keyword">null</span>);</span><br><span class="line">	    <span class="keyword">return</span> <span class="keyword">new</span> ViewHolder1(view);</span><br><span class="line">	&#125; <span class="keyword">else</span> <span class="keyword">if</span> (viewType == ITEM_TYPE_2) &#123;</span><br><span class="line">	    view = View.inflate(mContext, R.layout.item_2, <span class="keyword">null</span>);</span><br><span class="line">	    <span class="keyword">return</span> <span class="keyword">new</span> ViewHolder2(view);</span><br><span class="line">	&#125; </span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">new</span> ViewHolder1(view);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>至此简单的item多类型布局就实现了。</p>
+<h2 id="item跨列">item跨列</h2>
+<p>item实现跨列主要通过重写GridLayoutManager的setSpanSizeLookup方法来实现，代码如下</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">gridLayoutManager.setSpanSizeLookup(<span class="keyword">new</span> GridLayoutManager.SpanSizeLookup() &#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getSpanSize</span><span class="params">(<span class="keyword">int</span> position)</span> </span>&#123;</span><br><span class="line">	    <span class="keyword">int</span> spanSize;</span><br><span class="line">	    <span class="keyword">if</span> (adapter.getItemViewType(position) == ITEM_TYPE_1) &#123;</span><br><span class="line">	        spanSize = <span class="number">2</span>;<span class="comment">//跨2列</span></span><br><span class="line">	    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (adapter.getItemViewType(position) == ITEM_TYPE_2) &#123;</span><br><span class="line">	        spanSize = <span class="number">1</span>;<span class="comment">//跨1列</span></span><br><span class="line">	    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">	        spanSize = <span class="number">2</span>;</span><br><span class="line">	    &#125;</span><br><span class="line">	    <span class="keyword">return</span> spanSize;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>此处的spanSize即为需要跨的列数，这里通过当前布局类型来设置对应的spanSize，至此完成跨列。</p>
 ]]></content>
+      <categories>
+        <category>安卓笔记</category>
+      </categories>
+      <tags>
+        <tag>RecyclerView</tag>
+      </tags>
   </entry>
   <entry>
-    <title>应用启动流程</title>
-    <url>/2023/07/30/%E5%BA%94%E7%94%A8%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/</url>
-    <content><![CDATA[<h2 id="前言">前言</h2>
-<p>本文主要介绍应用的冷启流程的主要流程。</p>
-<h3 id="主要流程图">主要流程图</h3>
-<p><img src="/2023/07/30/应用启动流程/main.jpg" alt></p>
-<ul>
-<li>startActivity() 通过Instrumentation 向 AMS 进程发起 startActivity() 请求</li>
-<li>AMS收到启动请求后由 ActivityStarter 处理 Flags 和 Intent 信息,然后再由 ActivityStackSupervisor 和 ActivityStack 处理 Task 和 Stack 流程</li>
-<li>在 ActivityStackSupervisor 中判断 app 进程是否存在，若不存在则请求 AMS 进程创建新进程，app 进程存在的情况请直接跳到第7步</li>
-<li>AMS 进程通过 Socket 方式请求 Zygote fork 新进程</li>
-<li>在新进程里创建 ActivityThread(主线程) 并开启 Looper 循环，同时将 ApplicationThread 绑定到 AMS</li>
-<li>AMS 回调 ApplicationThread 的 bindApplication() 方法将自身与新进程绑定，并在 ActivityThread 的 handleBindApplication() 方法中创建应用的 Application</li>
-<li>Application 创建成功后，AMS 调用 ActivityStackSupervisor#realStartActivityLocked 向ActivityThread 发送创建 Activity 请求</li>
-<li>ActivityThread 利用 ClassLoader 去加载 Activity，并回调其生命周期方法。</li>
-</ul>
+    <title>View的Invalidate流程</title>
+    <url>/2023/09/16/View%E7%9A%84Invalidate%E6%B5%81%E7%A8%8B/</url>
+    <content><![CDATA[<h1>前言</h1>
+<p>本文主要是整理下 View 执行 invalidate 方法的流程（软件绘制场景下）。</p>
+<h2 id="时序图">时序图</h2>
+<p>核心点是执行 view 的 doTraversal 之前会插入同步屏障，然后依赖 Choreographer postCallback 的监听系统的 vsync 信号，当信号到来时执行 doTraversal 方法，在此之后移除同步屏障，紧接着就是自顶向下执行 measure，layout，draw 方法。</p>
+<p><img src="/2023/09/16/View的Invalidate流程/invalidate%E6%B5%81%E7%A8%8B.png" alt></p>
 ]]></content>
       <categories>
         <category>安卓笔记</category>
@@ -884,35 +840,17 @@ JS侧构建完Fiber Tree后，会将UI指令通过MessageQueue传递到Native侧
       </tags>
   </entry>
   <entry>
-    <title>简单方式实现无限轮播Banner</title>
-    <url>/2018/12/25/%E7%AE%80%E5%8D%95%E6%96%B9%E5%BC%8F%E5%AE%9E%E7%8E%B0%E8%BD%AE%E6%92%AD%E6%8E%A7%E4%BB%B6/</url>
-    <content><![CDATA[<h2 id="前言">前言</h2>
-<p>本文主要介绍一种简单实现无限轮播banner的方式。先来看下最后的效果如下:</p>
-<p><img src="/2018/12/25/简单方式实现轮播控件/bannergif.gif" alt></p>
-<h2 id="思路">思路</h2>
-<p>实现无限轮播思路很简单：基础控件肯定是选用viewpager，然后结合假数据与viewpager的特殊生命周期方法<strong>onPageSelected</strong>与<strong>onPageScrollStateChanged</strong>，最终实现无限轮播效果。</p>
-<h2 id="假数据">假数据</h2>
-<p>所谓假数据，就是在原始imageView数组最前与最后各加一个假数据，既<strong>在原imageView数组的最前面增加一个与原最后一个imageView相同的imageView，同理在原imageView数组最后增加一个与原始第一个imageView相同的imageView</strong>，这样在最后一帧和第一帧进行切换时就会产生一种轮播的假象。结合下图应该就会比较容易理解。
-<img src="/2018/12/25/简单方式实现轮播控件/banner.png" alt="banner"></p>
-<h2 id="具体实现">具体实现</h2>
-<p>有了上文提到的假数据之后，在最后一张图片向右切换时，滑动过程中漏出来的是假的第一张图片，而当这张图片完全展示出来之后，我们需要将整个viewpager定位到index为1的真正的第一张图片。同理，在由第一张图片向左切换时，漏出的是假的最后一张图片，而当这张图片完全展示后，我们需要将整个viewpager定位到index为3的图片。</p>
-<p>ps：viewpager的index切换使用了<code>mPager.setCurrentItem(pageIndex, false);</code>方法，这样用户肉眼无法看出来banner进行了切换。</p>
-<p>根据上面的思路，现在需要实现一个index的简单计算。这里选择在viewpager的onPageSelected方法来实现index的计算。为什么要选择这个方法呢？我们先来看下官方对这个方法给出的定义：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"> <span class="comment">/**</span></span><br><span class="line"><span class="comment"> * This method will be invoked when a new page becomes selected. Animation is not</span></span><br><span class="line"><span class="comment"> * necessarily complete.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> position Position index of the new selected page.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">onPageSelected</span><span class="params">(<span class="keyword">int</span> position)</span></span>;</span><br></pre></td></tr></table></figure>
-<p>可以看出这个方法是在新的一页被选择后调用，并且会把被选择的position作为参数传入，所以在我们在这个方法上可以轻易的计算出我们希望的index，具体实现代码如下：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onPageSelected</span><span class="params">(<span class="keyword">int</span> i)</span> </span>&#123;</span><br><span class="line">	pageIndex = i;<span class="comment">//i取值从0~4，3个原始数据2个假数据</span></span><br><span class="line">	<span class="keyword">final</span> <span class="keyword">int</span> imageViewSize = mImageViews.size();<span class="comment">//imageView的总数</span></span><br><span class="line">	<span class="keyword">if</span> (FAKE_ITEM_COUNT == <span class="number">2</span> &amp;&amp; imageViewSize &gt; <span class="number">1</span>) &#123;<span class="comment">//其中FAKE_ITEM_COUNT是指两个假数据</span></span><br><span class="line">		<span class="keyword">if</span> (i == <span class="number">0</span>) &#123;<span class="comment">// 当视图在第一个时，将页面号设置为图片的最后一张</span></span><br><span class="line">		    pageIndex = imageViewSize - FAKE_ITEM_COUNT;</span><br><span class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (i == mImageViews.size() - <span class="number">1</span>) &#123;<span class="comment">// 当视图在最后一个时,将页面号设置为图片的第一张</span></span><br><span class="line">		    pageIndex = <span class="number">1</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>结合代码注释，理解起来应该很容易，这里就不在赘述。现在计算好了index，我们最后只需要在合适的时机进行切换就大功告成了。这个合适的时机就是viewpager滑停的时候，整个实现代码如下：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onPageScrollStateChanged</span><span class="params">(<span class="keyword">int</span> i)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (i == ViewPager.SCROLL_STATE_IDLE) &#123;</span><br><span class="line">	    <span class="keyword">if</span> (mPager.getCurrentItem() != pageIndex) &#123;</span><br><span class="line">	        mPager.setCurrentItem(pageIndex, <span class="keyword">false</span>);</span><br><span class="line">	    &#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>理解起来也很容易，既当viewpager滑停后，如果viewpager当前的index与当前我们计算的pageIndex不同时就把viewpager切换到pageIndex的位置（index=0，pageIndex=3的场景和index=4，pageIndex=1的场景），这样就实现了无限轮播。</p>
-<h2 id="自动播放">自动播放</h2>
-<p>实现自动播放的方式是通过handler发一个延迟消息，而在handler的消息处理中只要去设置当前index+1即可</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> position = mPager.getCurrentItem() + <span class="number">1</span>;</span><br><span class="line"><span class="keyword">if</span> (position &gt;= mPager.getAdapter().getCount()) &#123; <span class="comment">// 滑到底就再滑到开头</span></span><br><span class="line">    position = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line">mPager.setCurrentItem(position);</span><br></pre></td></tr></table></figure>
-<p>最后贴一下整个Demo的地址</p>
-<p><a href="https://github.com/PeterXiaoWang/BannerView" target="_blank" rel="noopener">https://github.com/PeterXiaoWang/BannerView</a></p>
+    <title>Web缓存</title>
+    <url>/2022/08/15/Web%E7%BC%93%E5%AD%98/</url>
+    <content><![CDATA[<p>本文总结下Cookie &amp; Web Storage</p>
+<p><img src="/2022/08/15/Web缓存/web.png" alt></p>
 ]]></content>
       <categories>
-        <category>安卓笔记</category>
+        <category>H5基础</category>
       </categories>
+      <tags>
+        <tag>javascript</tag>
+      </tags>
   </entry>
   <entry>
     <title>kotlin协程总结</title>
@@ -1038,6 +976,68 @@ JS侧构建完Fiber Tree后，会将UI指令通过MessageQueue传递到Native侧
       <tags>
         <tag>kotlin</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/2018/12/20/hello-world/</url>
+    <content><![CDATA[<p>Hello world!</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>应用启动流程</title>
+    <url>/2023/07/30/%E5%BA%94%E7%94%A8%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/</url>
+    <content><![CDATA[<h2 id="前言">前言</h2>
+<p>本文主要介绍应用的冷启流程的主要流程。</p>
+<h3 id="主要流程图">主要流程图</h3>
+<p><img src="/2023/07/30/应用启动流程/main.jpg" alt></p>
+<ul>
+<li>startActivity() 通过Instrumentation 向 AMS 进程发起 startActivity() 请求</li>
+<li>AMS收到启动请求后由 ActivityStarter 处理 Flags 和 Intent 信息,然后再由 ActivityStackSupervisor 和 ActivityStack 处理 Task 和 Stack 流程</li>
+<li>在 ActivityStackSupervisor 中判断 app 进程是否存在，若不存在则请求 AMS 进程创建新进程，app 进程存在的情况请直接跳到第7步</li>
+<li>AMS 进程通过 Socket 方式请求 Zygote fork 新进程</li>
+<li>在新进程里创建 ActivityThread(主线程) 并开启 Looper 循环，同时将 ApplicationThread 绑定到 AMS</li>
+<li>AMS 回调 ApplicationThread 的 bindApplication() 方法将自身与新进程绑定，并在 ActivityThread 的 handleBindApplication() 方法中创建应用的 Application</li>
+<li>Application 创建成功后，AMS 调用 ActivityStackSupervisor#realStartActivityLocked 向ActivityThread 发送创建 Activity 请求</li>
+<li>ActivityThread 利用 ClassLoader 去加载 Activity，并回调其生命周期方法。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>安卓笔记</category>
+      </categories>
+      <tags>
+        <tag>Android Framework</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>简单方式实现无限轮播Banner</title>
+    <url>/2018/12/25/%E7%AE%80%E5%8D%95%E6%96%B9%E5%BC%8F%E5%AE%9E%E7%8E%B0%E8%BD%AE%E6%92%AD%E6%8E%A7%E4%BB%B6/</url>
+    <content><![CDATA[<h2 id="前言">前言</h2>
+<p>本文主要介绍一种简单实现无限轮播banner的方式。先来看下最后的效果如下:</p>
+<p><img src="/2018/12/25/简单方式实现轮播控件/bannergif.gif" alt></p>
+<h2 id="思路">思路</h2>
+<p>实现无限轮播思路很简单：基础控件肯定是选用viewpager，然后结合假数据与viewpager的特殊生命周期方法<strong>onPageSelected</strong>与<strong>onPageScrollStateChanged</strong>，最终实现无限轮播效果。</p>
+<h2 id="假数据">假数据</h2>
+<p>所谓假数据，就是在原始imageView数组最前与最后各加一个假数据，既<strong>在原imageView数组的最前面增加一个与原最后一个imageView相同的imageView，同理在原imageView数组最后增加一个与原始第一个imageView相同的imageView</strong>，这样在最后一帧和第一帧进行切换时就会产生一种轮播的假象。结合下图应该就会比较容易理解。
+<img src="/2018/12/25/简单方式实现轮播控件/banner.png" alt="banner"></p>
+<h2 id="具体实现">具体实现</h2>
+<p>有了上文提到的假数据之后，在最后一张图片向右切换时，滑动过程中漏出来的是假的第一张图片，而当这张图片完全展示出来之后，我们需要将整个viewpager定位到index为1的真正的第一张图片。同理，在由第一张图片向左切换时，漏出的是假的最后一张图片，而当这张图片完全展示后，我们需要将整个viewpager定位到index为3的图片。</p>
+<p>ps：viewpager的index切换使用了<code>mPager.setCurrentItem(pageIndex, false);</code>方法，这样用户肉眼无法看出来banner进行了切换。</p>
+<p>根据上面的思路，现在需要实现一个index的简单计算。这里选择在viewpager的onPageSelected方法来实现index的计算。为什么要选择这个方法呢？我们先来看下官方对这个方法给出的定义：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"> <span class="comment">/**</span></span><br><span class="line"><span class="comment"> * This method will be invoked when a new page becomes selected. Animation is not</span></span><br><span class="line"><span class="comment"> * necessarily complete.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> position Position index of the new selected page.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">onPageSelected</span><span class="params">(<span class="keyword">int</span> position)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>可以看出这个方法是在新的一页被选择后调用，并且会把被选择的position作为参数传入，所以在我们在这个方法上可以轻易的计算出我们希望的index，具体实现代码如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onPageSelected</span><span class="params">(<span class="keyword">int</span> i)</span> </span>&#123;</span><br><span class="line">	pageIndex = i;<span class="comment">//i取值从0~4，3个原始数据2个假数据</span></span><br><span class="line">	<span class="keyword">final</span> <span class="keyword">int</span> imageViewSize = mImageViews.size();<span class="comment">//imageView的总数</span></span><br><span class="line">	<span class="keyword">if</span> (FAKE_ITEM_COUNT == <span class="number">2</span> &amp;&amp; imageViewSize &gt; <span class="number">1</span>) &#123;<span class="comment">//其中FAKE_ITEM_COUNT是指两个假数据</span></span><br><span class="line">		<span class="keyword">if</span> (i == <span class="number">0</span>) &#123;<span class="comment">// 当视图在第一个时，将页面号设置为图片的最后一张</span></span><br><span class="line">		    pageIndex = imageViewSize - FAKE_ITEM_COUNT;</span><br><span class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (i == mImageViews.size() - <span class="number">1</span>) &#123;<span class="comment">// 当视图在最后一个时,将页面号设置为图片的第一张</span></span><br><span class="line">		    pageIndex = <span class="number">1</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结合代码注释，理解起来应该很容易，这里就不在赘述。现在计算好了index，我们最后只需要在合适的时机进行切换就大功告成了。这个合适的时机就是viewpager滑停的时候，整个实现代码如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onPageScrollStateChanged</span><span class="params">(<span class="keyword">int</span> i)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (i == ViewPager.SCROLL_STATE_IDLE) &#123;</span><br><span class="line">	    <span class="keyword">if</span> (mPager.getCurrentItem() != pageIndex) &#123;</span><br><span class="line">	        mPager.setCurrentItem(pageIndex, <span class="keyword">false</span>);</span><br><span class="line">	    &#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>理解起来也很容易，既当viewpager滑停后，如果viewpager当前的index与当前我们计算的pageIndex不同时就把viewpager切换到pageIndex的位置（index=0，pageIndex=3的场景和index=4，pageIndex=1的场景），这样就实现了无限轮播。</p>
+<h2 id="自动播放">自动播放</h2>
+<p>实现自动播放的方式是通过handler发一个延迟消息，而在handler的消息处理中只要去设置当前index+1即可</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> position = mPager.getCurrentItem() + <span class="number">1</span>;</span><br><span class="line"><span class="keyword">if</span> (position &gt;= mPager.getAdapter().getCount()) &#123; <span class="comment">// 滑到底就再滑到开头</span></span><br><span class="line">    position = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line">mPager.setCurrentItem(position);</span><br></pre></td></tr></table></figure>
+<p>最后贴一下整个Demo的地址</p>
+<p><a href="https://github.com/PeterXiaoWang/BannerView" target="_blank" rel="noopener">https://github.com/PeterXiaoWang/BannerView</a></p>
+]]></content>
+      <categories>
+        <category>安卓笔记</category>
+      </categories>
   </entry>
   <entry>
     <title>通过LinkedHashMap缓存图片并实现LRU策略</title>
